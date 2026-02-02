@@ -1,1 +1,15 @@
-
+{
+  "subjects": [
+    {
+      "id": "kemi",
+      "name": "Periodiska Systemet",
+      "layout": "periodic-grid",
+      "items": [
+        { "symbol": "H", "name": "Väte", "number": 1, "pos": [1, 1] },
+        { "symbol": "He", "name": "Helium", "number": 2, "pos": [1, 18] },
+        { "symbol": "Li", "name": "Litium", "number": 3, "pos": [2, 1] },
+        { "symbol": "Be", "name": "Beryllium", "number": 4, "pos": [2, 2] }
+      ]
+    }
+  ]
+}
