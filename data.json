@@ -5,16 +5,21 @@
       "name": "Periodiska Systemet",
       "layout": "periodic-grid",
       "items": [
-        { "symbol": "H", "name": "Väte", "number": 1, "pos": [1, 1], "tasks": [{"q":"Vilket tecken har Väte?", "a":"H", "label":"KEMI"}] },
-        { "symbol": "He", "name": "Helium", "number": 2, "pos": [1, 18], "tasks": [{"q":"Vilket tecken har Helium?", "a":"He", "label":"KEMI"}] },
-        { "symbol": "Li", "name": "Litium", "number": 3, "pos": [2, 1], "tasks": [{"q":"Vilket tecken har Litium?", "a":"Li", "label":"KEMI"}] },
-        { "symbol": "Be", "name": "Beryllium", "number": 4, "pos": [2, 2], "tasks": [{"q":"Vilket tecken har Beryllium?", "a":"Be", "label":"KEMI"}] },
-        { "symbol": "B", "name": "Bor", "number": 5, "pos": [2, 13], "tasks": [{"q":"Vilket tecken har Bor?", "a":"B", "label":"KEMI"}] },
-        { "symbol": "C", "name": "Kol", "number": 6, "pos": [2, 14], "tasks": [{"q":"Vilket tecken har Kol?", "a":"C", "label":"KEMI"}] },
-        { "symbol": "N", "name": "Kväve", "number": 7, "pos": [2, 15], "tasks": [{"q":"Vilket tecken har Kväve?", "a":"N", "label":"KEMI"}] },
-        { "symbol": "O", "name": "Syre", "number": 8, "pos": [2, 16], "tasks": [{"q":"Vilket tecken har Syre?", "a":"O", "label":"KEMI"}] },
-        { "symbol": "F", "name": "Fluor", "number": 9, "pos": [2, 17], "tasks": [{"q":"Vilket tecken har Fluor?", "a":"F", "label":"KEMI"}] },
-        { "symbol": "Ne", "name": "Neon", "number": 10, "pos": [2, 18], "tasks": [{"q":"Vilket tecken har Neon?", "a":"Ne", "label":"KEMI"}] }
+        { "number": 1, "symbol": "H", "name": "Väte", "pos": [1, 1] },
+        { "number": 2, "symbol": "He", "name": "Helium", "pos": [1, 18] },
+        { "number": 3, "symbol": "Li", "name": "Litium", "pos": [2, 1] },
+        { "number": 4, "symbol": "Be", "name": "Beryllium", "pos": [2, 2] },
+        { "number": 5, "symbol": "B", "name": "Bor", "pos": [2, 13] },
+        { "number": 6, "symbol": "C", "name": "Kol", "pos": [2, 14] },
+        { "number": 7, "symbol": "N", "name": "Kväve", "pos": [2, 15] },
+        { "number": 8, "symbol": "O", "name": "Syre", "pos": [2, 16] },
+        { "number": 9, "symbol": "F", "name": "Fluor", "pos": [2, 17] },
+        { "number": 10, "symbol": "Ne", "name": "Neon", "pos": [2, 18] },
+        { "number": 11, "symbol": "Na", "name": "Natrium", "pos": [3, 1] },
+        { "number": 12, "symbol": "Mg", "name": "Magnesium", "pos": [3, 2] },
+        { "number": 79, "symbol": "Au", "name": "Guld", "pos": [6, 11] },
+        { "number": 80, "symbol": "Hg", "name": "Kvicksilver", "pos": [6, 12] },
+        { "number": 118, "symbol": "Og", "name": "Oganesson", "pos": [7, 18] }
       ]
     }
   ]
