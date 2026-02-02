@@ -6,12 +6,11 @@ body {
 
 #header {
     padding: 15px; background: white; text-align: center;
-    border-bottom: 1px solid #e2e8f0; z-index: 10;
+    border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100;
 }
 
-/* Läges-väljare */
 .mode-selector {
-    display: inline-flex; background: #e2e8f0; 
+    display: inline-flex; background: #f1f5f9; 
     padding: 4px; border-radius: 12px; margin-top: 10px;
 }
 .mode-toggle {
@@ -20,57 +19,51 @@ body {
 }
 .mode-toggle.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #3b82f6; }
 
-/* Grid-hantering */
-#grid-wrapper {
-    flex: 1; overflow: auto; padding: 20px;
-    -webkit-overflow-scrolling: touch;
+#grid-wrapper { flex: 1; overflow: auto; padding: 20px; background: #f8fafc; }
+
+/* Grid för 18 kolumner och 10 rader (inklusive lantanider/aktinider) */
+#main-container { 
+    display: grid; 
+    grid-template-columns: repeat(18, 60px); 
+    grid-template-rows: repeat(10, 60px); 
+    gap: 6px; 
 }
 
-#main-container {
-    display: grid;
-    grid-template-columns: repeat(18, 55px);
-    grid-template-rows: repeat(7, 55px);
-    gap: 6px; margin: 0 auto;
-}
-
-/* Elementet */
 .element {
-    background: white; border: 1px solid #cbd5e1;
+    background: white; border: 1px solid #e2e8f0;
     display: flex; flex-direction: column; align-items: center;
     justify-content: center; border-radius: 8px; position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.symbol { font-weight: 900; font-size: 16px; transition: opacity 0.2s; }
-.number { position: absolute; top: 4px; left: 5px; font-size: 9px; font-weight: 800; color: #94a3b8; }
+.symbol { font-weight: 900; font-size: 16px; color: #334155; }
+.number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; color: #94a3b8; }
 
-/* QUIZ-LÄGE: Dölj symbolen */
-body.quiz-mode .symbol { opacity: 0; }
-body.quiz-mode .element { background: #f8fafc; }
+body.quiz-mode .symbol { display: none; }
+body.quiz-mode .element { border-style: dashed; background: #fafafa; }
 
-/* INFO CARD DESIGN */
-#info-overlay {
+/* INFO OVERLAY & QUIZ MODAL (Samma som tidigare) */
+#info-overlay, #quiz-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4); z-index: 1000;
-    display: flex; align-items: flex-end;
+    background: rgba(15, 23, 42, 0.7); z-index: 1000;
+    display: flex; align-items: flex-end; backdrop-filter: blur(4px);
 }
+
+#quiz-overlay { align-items: center; background: white; flex-direction: column; padding: 40px 20px; }
 
 .info-card {
-    width: 100%; background: white; border-radius: 24px 24px 0 0;
+    width: 100%; background: white; border-radius: 30px 30px 0 0;
     padding: 20px 25px 40px; position: relative;
-    box-shadow: 0 -10px 20px rgba(0,0,0,0.1);
 }
 
-.handle { width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: 0 auto 15px; }
-#close-info { position: absolute; top: 20px; right: 20px; border: none; background: #f1f5f9; border-radius: 50%; width: 30px; height: 30px; font-weight: 900; cursor: pointer; }
-
-.card-symbol { font-size: 54px; font-weight: 900; color: #3b82f6; margin: 0; text-align: center; }
-.card-name { text-align: center; font-size: 24px; font-weight: 800; margin: 5px 0 20px; }
+.card-symbol { font-size: 64px; font-weight: 900; color: #3b82f6; text-align: center; margin: 0; }
+.card-name { text-align: center; font-size: 28px; font-weight: 900; margin: 5px 0 20px; }
 .card-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
 
-.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 800; font-size: 16px; margin-top: 20px; cursor: pointer; }
+.options-container { display: grid; gap: 12px; width: 100%; max-width: 400px; margin-top: 20px; }
+.option-btn { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; background: white; font-size: 16px; font-weight: 700; }
+.correct { background: #22c55e !important; color: white; }
+.wrong { background: #ef4444 !important; color: white; }
 
-@media (orientation: landscape) {
-    #main-container { grid-template-columns: repeat(18, 5vw); grid-template-rows: repeat(7, 10vh); }
-}
-
+.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; margin-top: 20px; }
 .hidden { display: none !important; }
