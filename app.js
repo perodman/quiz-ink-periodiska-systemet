@@ -11,18 +11,17 @@ fetch('data.json')
 function renderGrid(items) {
     const container = document.getElementById('main-container');
     container.innerHTML = '';
-
     items.forEach(item => {
         const div = document.createElement('div');
-        div.className = 'element';
+        
+        // Här lägger vi till kategorin som en klass för att få färg!
+        // Om item.category inte finns i JSON än, kan vi sätta en standard
+        const categoryClass = item.category || 'metall'; 
+        div.className = `element ${categoryClass}`;
+        
         div.style.gridRow = item.pos[0];
         div.style.gridColumn = item.pos[1];
-        
-        div.innerHTML = `
-            <span class="number">${item.number}</span>
-            <span class="symbol">${item.symbol}</span>
-        `;
-
+        div.innerHTML = `<span class="number">${item.number}</span><span class="symbol">${item.symbol}</span>`;
         div.onclick = () => showInfoCard(item);
         container.appendChild(div);
     });
