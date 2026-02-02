@@ -1,9 +1,7 @@
-/* GRUNDSTYLING */
 body {
     font-family: 'Inter', sans-serif;
     margin: 0; background: #f1f5f9; color: #1e293b;
     height: 100vh; display: flex; flex-direction: column;
-    -webkit-user-select: none; user-select: none;
 }
 
 #header {
@@ -21,7 +19,6 @@ body {
 }
 .mode-toggle.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #3b82f6; }
 
-/* GRID-OMRÅDE */
 #grid-wrapper { flex: 1; overflow: auto; padding: 20px; background: #f8fafc; }
 
 #main-container { 
@@ -32,7 +29,6 @@ body {
     margin: 0 auto;
 }
 
-/* ELEMENT-RUTA */
 .element {
     background: white; border: 1px solid #e2e8f0;
     display: flex; flex-direction: column; align-items: center;
@@ -40,59 +36,44 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     transition: transform 0.1s;
 }
-.element:active { transform: scale(0.9); }
 
 .symbol { font-weight: 900; font-size: 16px; color: #1e293b; z-index: 2; }
 .number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; color: #64748b; z-index: 2; }
 
-/* FÄRGSCHEMA FÖR KATEGORIER */
-/* Vi använder CSS-variabler för att enkelt kunna ändra färger */
-.element.ickemetall { background: #dcfce7; border-color: #86efac; } /* Grön */
-.element.adelgas { background: #fef9c3; border-color: #fde047; }    /* Gul */
-.element.alkalimetall { background: #fee2e2; border-color: #fca5a5; } /* Röd */
-.element.halvmetall { background: #f0f9ff; border-color: #bae6fd; }  /* Blå */
-.element.metall { background: #f1f5f9; border-color: #cbd5e1; }     /* Grå */
+/* FÄRGER PER KATEGORI */
+.ickemetall { background: #a7f3d0; border-color: #34d399; }
+.adelgas { background: #fef08a; border-color: #facc15; }
+.alkalimetall { background: #fecaca; border-color: #f87171; }
+.alkalisk-jordmetall { background: #fed7aa; border-color: #fb923c; }
+.halvmetall { background: #bfdbfe; border-color: #60a5fa; }
+.halogen { background: #e9d5ff; border-color: #c084fc; }
+.overgangsmetall { background: #f1f5f9; border-color: #cbd5e1; }
+.metall { background: #e2e8f0; border-color: #94a3b8; }
+.lantanid { background: #ddd6fe; border-color: #a78bfa; }
+.aktinid { background: #fbcfe8; border-color: #f472b6; }
 
-/* QUIZ LÄGE: Dölj symboler men behåll bakgrundsfärgen (svagare) */
+/* QUIZ LÄGE */
 body.quiz-mode .symbol { display: none; }
-body.quiz-mode .element { border-style: dashed; filter: saturate(0.5); }
+body.quiz-mode .element { border-style: dashed; filter: saturate(0.4) brightness(1.05); }
 
-/* INFO OVERLAY (Popupen som glider upp) */
-#info-overlay {
+/* POPUPS & MODALS */
+#info-overlay, #quiz-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(15, 23, 42, 0.7); z-index: 1000;
     display: flex; align-items: flex-end; backdrop-filter: blur(4px);
 }
-
-.info-card {
-    width: 100%; background: white; border-radius: 30px 30px 0 0;
-    padding: 20px 25px 40px; position: relative; box-sizing: border-box;
-}
-
-#close-info { position: absolute; top: 20px; right: 20px; border: none; background: #f1f5f9; border-radius: 50%; width: 35px; height: 35px; font-weight: 900; cursor: pointer; }
+#quiz-overlay { align-items: center; background: white; flex-direction: column; padding: 40px 20px; }
+.info-card { width: 100%; background: white; border-radius: 30px 30px 0 0; padding: 20px 25px 40px; position: relative; }
 .card-symbol { font-size: 64px; font-weight: 900; color: #3b82f6; text-align: center; margin: 0; }
 .card-name { text-align: center; font-size: 28px; font-weight: 900; margin: 5px 0 20px; }
-.card-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f1f5f9; }
-
-/* QUIZ-VY (Helskärm när quiz startar) */
-#quiz-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: white; z-index: 2000; display: flex; flex-direction: column;
-    padding: 40px 20px; align-items: center; box-sizing: border-box;
-}
-
-#quiz-question { font-size: 22px; font-weight: 800; margin-bottom: 40px; color: #0f172a; }
-.options-container { display: grid; gap: 12px; width: 100%; max-width: 400px; }
-.option-btn { padding: 20px; border: 2px solid #e2e8f0; border-radius: 15px; background: white; font-size: 18px; font-weight: 700; cursor: pointer; }
-.option-btn.correct { background: #22c55e; color: white; border-color: #16a34a; }
-.option-btn.wrong { background: #ef4444; color: white; border-color: #dc2626; }
-
-.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 20px; border-radius: 18px; font-weight: 800; font-size: 16px; margin-top: 25px; }
-
+.card-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+.options-container { display: grid; gap: 12px; width: 100%; max-width: 400px; margin-top: 20px; }
+.option-btn { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; background: white; font-size: 16px; font-weight: 700; }
+.correct { background: #22c55e !important; color: white; }
+.wrong { background: #ef4444 !important; color: white; }
+.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; margin-top: 20px; }
 .hidden { display: none !important; }
 
-/* LANDSKAPSLÄGE */
 @media (orientation: landscape) {
     #main-container { grid-template-columns: repeat(18, 5.2vw); grid-template-rows: repeat(10, 12vh); }
-    .symbol { font-size: 14px; }
 }
