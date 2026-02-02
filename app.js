@@ -1,6 +1,7 @@
 let currentData = [];
 let currentMode = 'study';
 
+// Ladda data
 fetch('data.json')
     .then(response => response.json())
     .then(data => {
@@ -8,15 +9,14 @@ fetch('data.json')
         renderGrid(currentData);
     });
 
+// Rendera griddet
 function renderGrid(items) {
     const container = document.getElementById('main-container');
     container.innerHTML = '';
     items.forEach(item => {
         const div = document.createElement('div');
-        
-        // HÄR SKER MAGIN: Lägger till kategorin som klass för färg!
-        div.className = `element ${item.category || 'overgangsmetall'}`;
-        
+        const cat = item.category ? item.category.toLowerCase() : 'overgangsmetall';
+        div.className = `element ${cat}`;
         div.style.gridRow = item.pos[0];
         div.style.gridColumn = item.pos[1];
         div.innerHTML = `<span class="number">${item.number}</span><span class="symbol">${item.symbol}</span>`;
@@ -25,6 +25,7 @@ function renderGrid(items) {
     });
 }
 
+// Lägesväljare
 document.getElementById('study-mode-btn').onclick = function() {
     currentMode = 'study'; document.body.classList.remove('quiz-mode');
     this.classList.add('active'); document.getElementById('quiz-mode-btn').classList.remove('active');
@@ -34,18 +35,25 @@ document.getElementById('quiz-mode-btn').onclick = function() {
     this.classList.add('active'); document.getElementById('study-mode-btn').classList.remove('active');
 };
 
+// Visa info-kort
 function showInfoCard(item) {
     const overlay = document.getElementById('info-overlay');
     document.getElementById('info-content').innerHTML = `
         <p class="card-symbol">${item.symbol}</p>
         <h2 class="card-name">${item.name}</h2>
         <div class="card-row"><span>Atomnummer</span> <strong>${item.number}</strong></div>
-        <div class="card-row"><span>Kategori</span> <strong style="text-transform: capitalize;">${item.category.replace('-', ' ')}</strong></div>
+        <div class="card-row"><span>Kategori</span> <strong style="text-transform:capitalize">${item.category.replace('-', ' ')}</strong></div>
     `;
     overlay.classList.remove('hidden');
     document.getElementById('start-item-quiz').onclick = () => startQuiz(item);
 }
 
+// Stäng info-kortet
+const closeInfo = () => document.getElementById('info-overlay').classList.add('hidden');
+document.getElementById('close-info').onclick = (e) => { e.stopPropagation(); closeInfo(); };
+document.getElementById('info-overlay').onclick = (e) => { if(e.target.id === 'info-overlay') closeInfo(); };
+
+// Quiz-motor
 function startQuiz(targetItem) {
     document.getElementById('info-overlay').classList.add('hidden');
     document.getElementById('quiz-overlay').classList.remove('hidden');
@@ -80,11 +88,8 @@ function startQuiz(targetItem) {
                 btn.classList.add('wrong');
             }
         };
-        optionsContainer.appendChild(btn); // Fix: Referera till rätt variabel
+        container.appendChild(btn);
     });
 }
 
-// Globala stängnings-event
 document.getElementById('exit-quiz').onclick = () => document.getElementById('quiz-overlay').classList.add('hidden');
-document.getElementById('close-info').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
-document.getElementById('info-overlay').onclick = (e) => { if (e.target.id === 'info-overlay') document.getElementById('info-overlay').classList.add('hidden'); };
