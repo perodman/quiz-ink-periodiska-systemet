@@ -1,7 +1,6 @@
 let currentData = [];
 let currentMode = 'study';
 
-// Ladda data
 fetch('data.json')
     .then(response => response.json())
     .then(data => {
@@ -9,14 +8,12 @@ fetch('data.json')
         renderGrid(currentData);
     });
 
-// Rendera griddet
 function renderGrid(items) {
     const container = document.getElementById('main-container');
     container.innerHTML = '';
     items.forEach(item => {
         const div = document.createElement('div');
-        const cat = item.category ? item.category.toLowerCase() : 'overgangsmetall';
-        div.className = `element ${cat}`;
+        div.className = `element ${item.category}`;
         div.style.gridRow = item.pos[0];
         div.style.gridColumn = item.pos[1];
         div.innerHTML = `<span class="number">${item.number}</span><span class="symbol">${item.symbol}</span>`;
@@ -24,6 +21,43 @@ function renderGrid(items) {
         container.appendChild(div);
     });
 }
+
+function showInfoCard(item) {
+    const overlay = document.getElementById('info-overlay');
+    
+    // Svenska översättningar för kategorier
+    const categoryNames = {
+        "ickemetall": "Ickemetall",
+        "adelgas": "Ädelgas",
+        "alkalimetall": "Alkalimetall",
+        "alkalisk-jordmetall": "Alkalisk jordmetall",
+        "halvmetall": "Halvmetall",
+        "halogen": "Halogen",
+        "overgangsmetall": "Övergångsmetall",
+        "metall": "Metall",
+        "lantanid": "Lantanid",
+        "aktinid": "Aktinid"
+    };
+
+    const catLabel = categoryNames[item.category] || item.category;
+
+    document.getElementById('info-content').innerHTML = `
+        <p class="card-symbol">${item.symbol}</p>
+        <h2 class="card-name">${item.name}</h2>
+        <div class="card-row"><span>Atomnummer</span> <strong>${item.number}</strong></div>
+        <div class="card-row"><span>Kategori</span> <strong>${catLabel}</strong></div>
+    `;
+    overlay.classList.remove('hidden');
+    document.getElementById('start-item-quiz').onclick = () => startQuiz(item);
+}
+
+// Stängningslogik
+const closeInfo = () => {
+    document.getElementById('info-overlay').classList.add('hidden');
+};
+
+document.getElementById('close-info').onclick = (e) => { e.stopPropagation(); closeInfo(); };
+document.getElementById('info-overlay').onclick = (e) => { if(e.target.id === 'info-overlay') closeInfo(); };
 
 // Lägesväljare
 document.getElementById('study-mode-btn').onclick = function() {
@@ -35,42 +69,22 @@ document.getElementById('quiz-mode-btn').onclick = function() {
     this.classList.add('active'); document.getElementById('study-mode-btn').classList.remove('active');
 };
 
-// Visa info-kort
-function showInfoCard(item) {
-    const overlay = document.getElementById('info-overlay');
-    document.getElementById('info-content').innerHTML = `
-        <p class="card-symbol">${item.symbol}</p>
-        <h2 class="card-name">${item.name}</h2>
-        <div class="card-row"><span>Atomnummer</span> <strong>${item.number}</strong></div>
-        <div class="card-row"><span>Kategori</span> <strong style="text-transform:capitalize">${item.category.replace('-', ' ')}</strong></div>
-    `;
-    overlay.classList.remove('hidden');
-    document.getElementById('start-item-quiz').onclick = () => startQuiz(item);
-}
-
-// Stäng info-kortet
-const closeInfo = () => document.getElementById('info-overlay').classList.add('hidden');
-document.getElementById('close-info').onclick = (e) => { e.stopPropagation(); closeInfo(); };
-document.getElementById('info-overlay').onclick = (e) => { if(e.target.id === 'info-overlay') closeInfo(); };
-
-// Quiz-motor
+// Quiz-logik (Förenklad version för att spara plats)
 function startQuiz(targetItem) {
     document.getElementById('info-overlay').classList.add('hidden');
     document.getElementById('quiz-overlay').classList.remove('hidden');
     
-    const types = ['name-to-symbol', 'symbol-to-name', 'number-to-symbol'];
+    const types = ['name-to-symbol', 'symbol-to-name'];
     const type = types[Math.floor(Math.random() * types.length)];
-    let questionText = (type === 'name-to-symbol') ? `Symbol för ${targetItem.name}?` : 
-                       (type === 'symbol-to-name') ? `Namn på "${targetItem.symbol}"?` : `Vilket ämne är nr ${targetItem.number}?`;
-    let correctAnswer = (type === 'symbol-to-name') ? targetItem.name : targetItem.symbol;
+    let questionText = (type === 'name-to-symbol') ? `Symbol för ${targetItem.name}?` : `Namn på "${targetItem.symbol}"?`;
+    let correctAnswer = (type === 'name-to-symbol') ? targetItem.symbol : targetItem.name;
 
     document.getElementById('quiz-question').innerText = questionText;
-
     let options = [correctAnswer];
-    while (options.length < 4) {
-        let randomItem = currentData[Math.floor(Math.random() * currentData.length)];
-        let val = (type === 'symbol-to-name') ? randomItem.name : randomItem.symbol;
-        if (!options.includes(val)) options.push(val);
+    while(options.length < 4) {
+        let r = currentData[Math.floor(Math.random()*currentData.length)];
+        let v = (type === 'name-to-symbol') ? r.symbol : r.name;
+        if(!options.includes(v)) options.push(v);
     }
     options.sort(() => Math.random() - 0.5);
 
@@ -81,9 +95,9 @@ function startQuiz(targetItem) {
         btn.className = 'option-btn';
         btn.innerText = opt;
         btn.onclick = () => {
-            if (opt === correctAnswer) {
+            if(opt === correctAnswer) {
                 btn.classList.add('correct');
-                setTimeout(() => document.getElementById('quiz-overlay').classList.add('hidden'), 800);
+                setTimeout(() => document.getElementById('quiz-overlay').classList.add('hidden'), 600);
             } else {
                 btn.classList.add('wrong');
             }
@@ -91,5 +105,4 @@ function startQuiz(targetItem) {
         container.appendChild(btn);
     });
 }
-
 document.getElementById('exit-quiz').onclick = () => document.getElementById('quiz-overlay').classList.add('hidden');
