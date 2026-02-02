@@ -1,14 +1,20 @@
 {
   "subjects": [
     {
-      "id": "kemi",
+      "id": "kemi_ps",
       "name": "Periodiska Systemet",
       "layout": "periodic-grid",
       "items": [
-        { "symbol": "H", "name": "Väte", "number": 1, "pos": [1, 1] },
-        { "symbol": "He", "name": "Helium", "number": 2, "pos": [1, 18] },
-        { "symbol": "Li", "name": "Litium", "number": 3, "pos": [2, 1] },
-        { "symbol": "Be", "name": "Beryllium", "number": 4, "pos": [2, 2] }
+        { "symbol": "H", "name": "Väte", "number": 1, "pos": [1, 1], "tasks": [{"q":"Vilket tecken har Väte?", "a":"H", "label":"KEMI"}] },
+        { "symbol": "He", "name": "Helium", "number": 2, "pos": [1, 18], "tasks": [{"q":"Vilket tecken har Helium?", "a":"He", "label":"KEMI"}] },
+        { "symbol": "Li", "name": "Litium", "number": 3, "pos": [2, 1], "tasks": [{"q":"Vilket tecken har Litium?", "a":"Li", "label":"KEMI"}] },
+        { "symbol": "Be", "name": "Beryllium", "number": 4, "pos": [2, 2], "tasks": [{"q":"Vilket tecken har Beryllium?", "a":"Be", "label":"KEMI"}] },
+        { "symbol": "B", "name": "Bor", "number": 5, "pos": [2, 13], "tasks": [{"q":"Vilket tecken har Bor?", "a":"B", "label":"KEMI"}] },
+        { "symbol": "C", "name": "Kol", "number": 6, "pos": [2, 14], "tasks": [{"q":"Vilket tecken har Kol?", "a":"C", "label":"KEMI"}] },
+        { "symbol": "N", "name": "Kväve", "number": 7, "pos": [2, 15], "tasks": [{"q":"Vilket tecken har Kväve?", "a":"N", "label":"KEMI"}] },
+        { "symbol": "O", "name": "Syre", "number": 8, "pos": [2, 16], "tasks": [{"q":"Vilket tecken har Syre?", "a":"O", "label":"KEMI"}] },
+        { "symbol": "F", "name": "Fluor", "number": 9, "pos": [2, 17], "tasks": [{"q":"Vilket tecken har Fluor?", "a":"F", "label":"KEMI"}] },
+        { "symbol": "Ne", "name": "Neon", "number": 10, "pos": [2, 18], "tasks": [{"q":"Vilket tecken har Neon?", "a":"Ne", "label":"KEMI"}] }
       ]
     }
   ]
