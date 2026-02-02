@@ -2,14 +2,27 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MultiQuiz Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app">
-        <h1 id="subject-title">Välj ämne</h1>
+        <header id="header">
+            <h1 id="subject-title">Laddar...</h1>
+            <div class="orientation-hint">💡 Vrid telefonen för helskärmsvy</div>
+        </header>
+        
         <div id="main-container"></div>
+
+        <div id="info-overlay" class="hidden">
+            <div class="info-card">
+                <button id="close-info">✕</button>
+                <div id="info-content"></div>
+                <button id="start-item-quiz" class="primary-btn">Träna på detta ämne</button>
+            </div>
+        </div>
     </div>
     <script src="app.js"></script>
 </body>
