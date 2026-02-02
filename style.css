@@ -2,78 +2,99 @@ body {
     font-family: 'Inter', sans-serif;
     margin: 0; background: #f1f5f9; color: #1e293b;
     height: 100vh; display: flex; flex-direction: column;
+    /* Aktiverar zoom på mobiler */
+    touch-action: manipulation; 
 }
 
+/* KOMPAKT HEADER */
 #header {
-    padding: 15px; background: white; text-align: center;
-    border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100;
+    padding: 8px 15px; /* Halverad padding */
+    background: white; 
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0; 
+    position: sticky; top: 0; z-index: 100;
+}
+
+#header h1 {
+    font-size: 18px; /* Mindre text */
+    margin: 5px 0;
 }
 
 .mode-selector {
     display: inline-flex; background: #f1f5f9; 
-    padding: 4px; border-radius: 12px; margin-top: 10px;
+    padding: 3px; border-radius: 8px; margin-top: 2px;
 }
 .mode-toggle {
-    border: none; padding: 8px 16px; border-radius: 10px;
-    font-weight: 700; font-size: 13px; cursor: pointer; background: transparent;
+    border: none; padding: 5px 12px; border-radius: 6px;
+    font-weight: 700; font-size: 11px; cursor: pointer; background: transparent;
 }
-.mode-toggle.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); color: #3b82f6; }
+.mode-toggle.active { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: #3b82f6; }
 
-#grid-wrapper { flex: 1; overflow: auto; padding: 20px; background: #f8fafc; }
+/* GRID-OMRÅDE */
+#grid-wrapper { 
+    flex: 1; 
+    overflow: auto; 
+    padding: 10px; 
+    background: #f8fafc;
+    /* Tillåter zoomning */
+    display: block;
+}
 
 #main-container { 
     display: grid; 
     grid-template-columns: repeat(18, 60px); 
     grid-template-rows: repeat(10, 60px); 
-    gap: 6px; 
+    gap: 4px; 
     margin: 0 auto;
+    width: fit-content;
 }
 
 .element {
-    background: white; border: 1px solid #e2e8f0;
+    background: white; border: 1px solid #cbd5e1;
     display: flex; flex-direction: column; align-items: center;
-    justify-content: center; border-radius: 8px; position: relative;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    transition: transform 0.1s;
+    justify-content: center; border-radius: 6px; position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.symbol { font-weight: 900; font-size: 16px; color: #1e293b; z-index: 2; }
-.number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; color: #64748b; z-index: 2; }
+.symbol { font-weight: 900; font-size: 16px; color: #0f172a; }
+.number { position: absolute; top: 2px; left: 4px; font-size: 9px; font-weight: 800; color: #475569; }
 
-/* FÄRGER PER KATEGORI */
-.ickemetall { background: #a7f3d0; border-color: #34d399; }
-.adelgas { background: #fef08a; border-color: #facc15; }
-.alkalimetall { background: #fecaca; border-color: #f87171; }
-.alkalisk-jordmetall { background: #fed7aa; border-color: #fb923c; }
-.halvmetall { background: #bfdbfe; border-color: #60a5fa; }
-.halogen { background: #e9d5ff; border-color: #c084fc; }
-.overgangsmetall { background: #f1f5f9; border-color: #cbd5e1; }
-.metall { background: #e2e8f0; border-color: #94a3b8; }
-.lantanid { background: #ddd6fe; border-color: #a78bfa; }
-.aktinid { background: #fbcfe8; border-color: #f472b6; }
+/* NYA KONTRASTRIKA FÄRGER */
+.ickemetall { background: #4ade80 !important; border-color: #166534 !important; } /* Stark grön */
+.adelgas { background: #fde047 !important; border-color: #a16207 !important; }    /* Stark gul */
+.alkalimetall { background: #f87171 !important; border-color: #991b1b !important; } /* Stark röd */
+.alkalisk-jordmetall { background: #fb923c !important; border-color: #9a3412 !important; } /* Orange */
+.halvmetall { background: #2dd4bf !important; border-color: #134e4a !important; }  /* Turkos/Blågrön */
+.halogen { background: #c084fc !important; border-color: #6b21a8 !important; }    /* Lila */
+.overgangsmetall { background: #cbd5e1 !important; border-color: #475569 !important; } /* Stålgrå */
+.metall { background: #94a3b8 !important; border-color: #1e293b !important; }        /* Mörkare Gråblå */
+.lantanid { background: #f472b6 !important; border-color: #831843 !important; }    /* Rosa */
+.aktinid { background: #fb7185 !important; border-color: #881337 !important; }     /* Vinröd */
 
 /* QUIZ LÄGE */
 body.quiz-mode .symbol { display: none; }
-body.quiz-mode .element { border-style: dashed; filter: saturate(0.4) brightness(1.05); }
+body.quiz-mode .element { border-style: dashed; filter: brightness(1.1); }
 
-/* POPUPS & MODALS */
-#info-overlay, #quiz-overlay {
+/* INFO CARD & KRYSSET */
+#info-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(15, 23, 42, 0.7); z-index: 1000;
     display: flex; align-items: flex-end; backdrop-filter: blur(4px);
 }
-#quiz-overlay { align-items: center; background: white; flex-direction: column; padding: 40px 20px; }
-.info-card { width: 100%; background: white; border-radius: 30px 30px 0 0; padding: 20px 25px 40px; position: relative; }
-.card-symbol { font-size: 64px; font-weight: 900; color: #3b82f6; text-align: center; margin: 0; }
-.card-name { text-align: center; font-size: 28px; font-weight: 900; margin: 5px 0 20px; }
-.card-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
-.options-container { display: grid; gap: 12px; width: 100%; max-width: 400px; margin-top: 20px; }
-.option-btn { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; background: white; font-size: 16px; font-weight: 700; }
-.correct { background: #22c55e !important; color: white; }
-.wrong { background: #ef4444 !important; color: white; }
-.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; margin-top: 20px; }
-.hidden { display: none !important; }
 
-@media (orientation: landscape) {
-    #main-container { grid-template-columns: repeat(18, 5.2vw); grid-template-rows: repeat(10, 12vh); }
+.info-card { width: 100%; background: white; border-radius: 20px 20px 0 0; padding: 15px 20px 30px; position: relative; box-sizing: border-box; }
+
+/* Stäng-knappen (X) */
+#close-info { 
+    position: absolute; top: 15px; right: 15px; 
+    border: none; background: #f1f5f9; border-radius: 50%; 
+    width: 32px; height: 32px; font-weight: 900; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
 }
+
+.card-symbol { font-size: 48px; font-weight: 900; color: #3b82f6; text-align: center; margin: 0; }
+.card-name { text-align: center; font-size: 24px; font-weight: 900; margin: 0 0 15px; }
+.card-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 800; margin-top: 15px; }
+
+.hidden { display: none !important; }
