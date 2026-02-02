@@ -1,79 +1,80 @@
 body {
     font-family: 'Inter', sans-serif;
     margin: 0; background: #f1f5f9; color: #1e293b;
-    height: 100vh; display: flex; flex-direction: column;
-    touch-action: manipulation;
+    height: 100vh; overflow: hidden;
 }
 
-/* KOMPAKT HEADER */
-#header {
-    padding: 8px 15px; background: white; text-align: center;
-    border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100;
+/* ROTATIONSTIPS - Visas bara i porträttläge */
+#rotation-hint {
+    position: fixed; top: 10px; right: 10px; background: rgba(15, 23, 42, 0.8);
+    color: white; padding: 5px 10px; border-radius: 20px; font-size: 10px;
+    z-index: 2000; pointer-events: none; animation: pulse 2s infinite;
 }
-#header h1 { font-size: 18px; margin: 5px 0; font-weight: 900; }
+@media (orientation: landscape) { #rotation-hint { display: none; } }
 
-.mode-selector { display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; }
-.mode-toggle {
-    border: none; padding: 5px 12px; border-radius: 6px;
-    font-weight: 700; font-size: 11px; cursor: pointer; background: transparent;
-}
-.mode-toggle.active { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: #3b82f6; }
+@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+/* HEADER */
+#header { padding: 8px; background: white; text-align: center; border-bottom: 1px solid #e2e8f0; }
+#header h1 { font-size: 16px; margin: 4px 0; font-weight: 900; }
 
 /* GRID */
-#grid-wrapper { flex: 1; overflow: auto; padding: 10px; background: #f8fafc; }
+#grid-wrapper { flex: 1; overflow: auto; padding: 15px; height: calc(100vh - 80px); }
 #main-container { 
-    display: grid; grid-template-columns: repeat(18, 60px); 
-    grid-template-rows: repeat(10, 60px); gap: 4px; margin: 0 auto; width: fit-content;
+    display: grid; grid-template-columns: repeat(18, 55px); 
+    grid-template-rows: repeat(10, 55px); gap: 4px; 
 }
 
+/* ELEMENT & KLICK-EFFECT */
 .element {
     background: white; border: 1px solid #cbd5e1;
     display: flex; flex-direction: column; align-items: center;
-    justify-content: center; border-radius: 6px; position: relative;
+    justify-content: center; border-radius: 6px; transition: transform 0.1s ease;
 }
-.symbol { font-weight: 900; font-size: 16px; color: #0f172a; }
-.number { position: absolute; top: 2px; left: 4px; font-size: 9px; font-weight: 800; color: #475569; }
+.element:active { transform: scale(0.92); } /* Liten klick-animation */
 
-/* STARKA KONTRAST-FÄRGER */
-.ickemetall { background: #4ade80 !important; border-color: #166534 !important; }
-.adelgas { background: #fde047 !important; border-color: #a16207 !important; }
-.alkalimetall { background: #f87171 !important; border-color: #991b1b !important; }
-.alkalisk-jordmetall { background: #fb923c !important; border-color: #9a3412 !important; }
-.halvmetall { background: #2dd4bf !important; border-color: #134e4a !important; }
-.halogen { background: #c084fc !important; border-color: #6b21a8 !important; }
-.overgangsmetall { background: #cbd5e1 !important; border-color: #475569 !important; }
-.metall { background: #94a3b8 !important; border-color: #1e293b !important; }
-.lantanid { background: #f472b6 !important; border-color: #831843 !important; }
-.aktinid { background: #fb7185 !important; border-color: #881337 !important; }
+.symbol { font-weight: 900; font-size: 14px; pointer-events: none; }
+.number { position: absolute; top: 2px; left: 4px; font-size: 8px; font-weight: 800; color: #475569; }
 
-/* LÄGEN */
-body.quiz-mode .symbol { display: none; }
-body.quiz-mode .element { border-style: dashed; filter: saturate(0.8); }
+/* STARKA FÄRGER & NY LJUSBLÅ */
+.ickemetall { background: #4ade80 !important; }
+.adelgas { background: #fde047 !important; }
+.alkalimetall { background: #f87171 !important; }
+.alkalisk-jordmetall { background: #fb923c !important; }
+.halvmetall { background: #93c5fd !important; } /* LJUSARE BLÅ för nr 5, 14, 32... */
+.halogen { background: #c084fc !important; }
+.overgangsmetall { background: #cbd5e1 !important; }
+.metall { background: #94a3b8 !important; }
+.lantanid { background: #f472b6 !important; }
+.aktinid { background: #fb7185 !important; }
 
-/* OVERLAYS */
-#info-overlay, #quiz-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(15, 23, 42, 0.7); z-index: 1000;
-    display: flex; align-items: flex-end; backdrop-filter: blur(4px);
+/* OVERLAY & POPUP ANIMATION */
+#info-overlay {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3000; backdrop-filter: blur(2px);
+    transition: opacity 0.3s ease;
 }
-#quiz-overlay { align-items: center; background: white; flex-direction: column; padding: 40px 20px; }
 
-.info-card { width: 100%; background: white; border-radius: 20px 20px 0 0; padding: 20px; position: relative; box-sizing: border-box; }
+.info-card {
+    width: 85%; max-width: 320px; background: white; 
+    border-radius: 20px; padding: 25px; position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+    /* Animation: Studsa upp */
+    transform: translateY(20px);
+    animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes slideUp { to { transform: translateY(0); } }
 
 #close-info { 
-    position: absolute; top: 15px; right: 15px; border: none; background: #f1f5f9; 
-    border-radius: 50%; width: 36px; height: 36px; font-size: 24px; font-weight: bold; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; z-index: 1001;
+    position: absolute; top: 12px; right: 12px; border: none; 
+    background: #f1f5f9; border-radius: 50%; width: 30px; height: 30px; 
+    font-size: 20px; font-weight: bold; cursor: pointer;
 }
 
-.card-symbol { font-size: 56px; font-weight: 900; color: #3b82f6; text-align: center; margin: 0; }
-.card-name { text-align: center; font-size: 26px; font-weight: 900; margin-bottom: 20px; }
-.card-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+.card-symbol { font-size: 50px; font-weight: 900; color: #3b82f6; margin: 0; text-align: center; }
+.card-name { text-align: center; font-size: 22px; margin-bottom: 15px; }
+.card-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
 
-.options-container { display: grid; gap: 10px; width: 100%; max-width: 400px; }
-.option-btn { padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; font-weight: 700; background: white; cursor: pointer; }
-.option-btn.correct { background: #22c55e; color: white; border-color: #16a34a; }
-.option-btn.wrong { background: #ef4444; color: white; border-color: #dc2626; }
-
-.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 16px; margin-top: 20px; cursor: pointer; }
 .hidden { display: none !important; }
