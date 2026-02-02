@@ -1,21 +1,62 @@
-#main-container {
-    display: grid;
-    grid-template-columns: repeat(18, 1fr); /* 18 kolumner för kemi */
-    gap: 5px;
-    padding: 10px;
-    overflow-x: auto; /* Scrollbart på mobilen */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    background: #f0f4f8;
+    color: #1e293b;
+    -webkit-tap-highlight-color: transparent;
 }
 
+#header {
+    padding: 20px;
+    background: white;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+h1 { margin: 0; font-size: 24px; }
+
+/* Behållare för det periodiska systemet */
+#main-container {
+    display: grid;
+    grid-template-columns: repeat(18, minmax(40px, 1fr)); /* 18 kolumner */
+    gap: 6px;
+    padding: 15px;
+    overflow-x: auto; /* Scrolla i sidled på mobilen */
+}
+
+/* De enskilda rutorna (elementen) */
 .element {
     background: white;
-    border: 1px solid #ccc;
+    border: 1px solid #e2e8f0;
     aspect-ratio: 1/1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
-    border-radius: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.1s, background 0.1s;
 }
 
-.symbol { font-weight: bold; font-size: 14px; }
+.element:active {
+    transform: scale(0.95);
+    background: #eff6ff;
+}
+
+.symbol {
+    font-weight: 800;
+    font-size: 16px;
+    color: #3b82f6;
+}
+
+.number {
+    font-size: 10px;
+    color: #94a3b8;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+
+/* För att positioneringen ska funka */
+.element { position: relative; }
