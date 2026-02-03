@@ -11,17 +11,15 @@
 
     <div id="start-page" class="portal-overlay">
         <div class="portal-content">
-            <div class="portal-badge">KEMI PRO</div>
+            <div class="portal-badge">KEMI</div>
             <h1>Periodiska Systemet</h1>
             
             <div class="portal-section-title">STUDIER</div>
             <div class="portal-grid">
                 <div class="portal-card full-width" onclick="startApp('study')">
                     <div class="card-icon">📖</div>
-                    <div class="card-text">
-                        <h3>Studieläge</h3>
-                        <p>Utforska ämnen och deras användning.</p>
-                    </div>
+                    <h3>Studieläge</h3>
+                    <p>Utforska alla ämnen och deras användning.</p>
                 </div>
             </div>
 
@@ -30,17 +28,17 @@
                 <div class="portal-card" onclick="startApp('quiz-symbol')">
                     <div class="card-icon">🧪</div>
                     <h3>Hitta Symbolen</h3>
+                    <p>Markera rätt plats i systemet.</p>
                 </div>
                 <div class="portal-card" onclick="startApp('quiz-name')">
                     <div class="card-icon">📝</div>
                     <h3>Namnge Ämnet</h3>
+                    <p>Skriv namnet på ämnet.</p>
                 </div>
                 <div class="portal-card full-width" onclick="startApp('quiz-multi')">
                     <div class="card-icon">🏁</div>
-                    <div class="card-text">
-                        <h3>Snabb-Quiz</h3>
-                        <p>Flervalsfrågor om symboler & namn.</p>
-                    </div>
+                    <h3>Snabb-Quiz</h3>
+                    <p>Flervalsfrågor om symboler & namn.</p>
                 </div>
             </div>
         </div>
@@ -58,6 +56,7 @@
         </div>
 
         <div class="floating-zoom">
+            <span class="zoom-label">ZOOM</span>
             <div class="zoom-toolbar">
                 <button id="zoom-out" class="zoom-btn">−</button>
                 <button id="reset-btn" class="zoom-btn">↺</button>
@@ -69,21 +68,30 @@
             <div class="card" id="card-inner">
                 <div class="card-face card-front" id="card-f">
                     <button class="close-x" onclick="closePopup()">&times;</button>
+                    
                     <div id="success-overlay" class="success-overlay hidden">👍</div>
+                    
                     <div id="front-content" class="content-center"></div>
+                    
                     <div id="quiz-input-area" class="hidden">
-                        <input type="text" id="guest-input" placeholder="Skriv namnet här...">
+                        <div class="input-wrapper">
+                            <input type="text" id="guest-input" placeholder="Namn?">
+                        </div>
                         <button onclick="checkGuess()" class="guess-submit">Svara</button>
                     </div>
+                    
                     <div id="multi-choice-area" class="hidden"></div>
+                    
                     <button class="flip-trigger" id="flip-btn-text">Mer information ➔</button>
                 </div>
                 
                 <div class="card-face card-back" id="card-b">
                     <button class="close-x" onclick="closePopup()">&times;</button>
                     <div class="back-layout">
-                        <div class="usage-header">💡 ANVÄNDNING & FAKTA</div>
-                        <div class="back-content"><p id="usage-text"></p></div>
+                        <div class="usage-header">💡 ANVÄNDNING</div>
+                        <div class="back-content">
+                            <p id="usage-text"></p>
+                        </div>
                     </div>
                     <button class="flip-trigger">⬅ Tillbaka</button>
                 </div>
