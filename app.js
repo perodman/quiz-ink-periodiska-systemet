@@ -5,67 +5,65 @@ let currentItem = null;
 let allElements = [];
 
 const elementFacts = {
-    "H": "Väte är universums vanligaste ämne. Det används som bränsle i rymdraketer och för att framställa ammoniak till konstgödsel.",
-    "He": "Helium används för att kyla supraledande magneter i MR-kameror och för att få ballonger att sväva.",
-    "Li": "Litium är ryggraden i elbilar och smartphones tack vare dess förmåga att lagra mycket energi i lätta batterier.",
-    "Be": "Beryllium är extremt styvt och lätt. Det används i rymdteleskop, som James Webb-teleskopet, och i stridsflygplan.",
-    "B": "Bor gör glas värmetåligt (Pyrex) och används i bromsvätskor samt som bekämpningsmedel mot myror.",
-    "C": "Kol är livets fundament. Det finns i allt från mjuka blyertspennor till världens hårdaste diamant.",
-    "N": "Kväve utgör 78% av luften. Flytande kväve används för att frysa mat blixtsnabbt och bevara biologiska prover.",
-    "O": "Syre krävs för andning och eld. Det används industriellt för att rena järn till stål.",
-    "F": "Fluor är superreaktivt. I form av fluorid stärker det tandemaljen och förhindrar karies i våra tänder.",
-    "Ne": "Neon lyser starkt röd-orange när det strömsätts. Det är klassikern i lysande reklamskyltar i storstäder.",
-    "Na": "Natrium är en mjuk metall som exploderar i vatten. Tillsammans med klor bildar det vanligt bordssalt.",
-    "Mg": "Magnesium brinner med ett bländande vitt ljus. Det används i fyrverkerier och lätta bildelar.",
-    "Al": "Aluminium rostar inte och väger lite. Det används i allt från folie och läskburkar till flygplansskrov.",
-    "Si": "Kisel är hjärnan i all modern teknik. Utan kiselchips hade vi varken haft datorer eller mobiltelefoner.",
-    "P": "Fosfor är livsviktigt för vårt DNA. Det används också i konstgödsel och på plån för tändstickor.",
-    "S": "Svavel luktar som ruttna ägg vid förbränning. Det används för att vulkanisera gummi i bildäck.",
-    "Cl": "Klor dödar bakterier och används för att hålla badvatten rent samt för att bleka papper.",
-    "Ar": "Argon är en ädelgas som skyddar glödtråden i gamla lampor och används vid svetsning.",
-    "K": "Kalium behövs för att kroppens nerver och muskler ska fungera. Det finns naturligt i bananer.",
-    "Ca": "Kalcium bygger upp våra ben och tänder. Det är också en viktig ingrediens i cement och betong.",
-    "Ti": "Titan är starkt som stål men lättare. Det används ofta i medicinska implantat.",
-    "Fe": "Järn är vår viktigaste industrimetall. Genom att tillsätta kol skapar vi stål.",
-    "Ni": "Nickel används främst i rostfritt stål och i laddningsbara batterier.",
-    "Cu": "Koppar leder ström fantastiskt bra. Det är metallen i världens elledningar.",
-    "Zn": "Zink används för att galvanisera stål och är en viktig ingrediens i solkrämer.",
-    "Ag": "Silver leder ström bäst av alla metaller. Det används i elektronik och smycken.",
-    "Sn": "Tenn används för att löda komponenter och i konservburkar.",
-    "I": "Jod är livsviktigt för sköldkörteln. Det tillsätts ofta i bordssalt.",
-    "W": "Volfram har högsta smältpunkten och används i borrverktyg.",
-    "Pt": "Platina är extremt sällsynt och används i katalysatorer.",
-    "Au": "Guld korroderar aldrig. Det används som värdebevarare och i elektronik.",
-    "Hg": "Kvicksilver är flytande vid rumstemperatur. Det är mycket giftigt.",
-    "Pb": "Bly är extremt tungt. Det används som skydd mot röntgenstrålning.",
-    "U": "Uran är bränslet i våra kärnkraftverk och innehåller enorma mängder energi.",
-    "Pu": "Plutonium används som bränsle i rymdsonder."
+    "H": "Väte är universums vanligaste ämne. Det används som bränsle i rymdraketer och är avgörande för produktion av ammoniak till konstgödsel.",
+    "He": "Helium används för att kyla supraledande magneter i MR-kameror på sjukhus, tack vare dess extremt låga kokpunkt.",
+    "Li": "Litium är ryggraden i modern bärbar teknik och elbilar tack vare dess förmåga att lagra energi i lätta batterier.",
+    "Be": "Beryllium är lättare än aluminium men styvare än stål. Det används i rymdteleskop och stridsflygplan.",
+    "B": "Bor gör glas värmetåligt (Pyrex) och är en viktig ingrediens i tvättmedel och neutronabsorbenter.",
+    "C": "Kol är livets byggsten. Det bildar allt från mjuka grafitstift i pennor till världens hårdaste diamant.",
+    "N": "Kväve utgör 78% av luften vi andas. I flytande form används det för att frysa mat snabbt och för att bevara biologiska prover.",
+    "O": "Syre krävs för förbränning och för nästan allt liv. Inom industrin används det för att tillverka stål och plast.",
+    "F": "Fluor är det mest reaktiva grundämnet. Det skyddar våra tänder i form av fluorid och används i non-stick beläggningar.",
+    "Ne": "Neon ger ett karaktäristiskt röd-orange ljus i urladdningsrör. Det används främst i reklamskyltar.",
+    "Na": "Natrium är en mjuk metall som reagerar våldsamt med vatten. Det är en av komponenterna i vanligt bordssalt.",
+    "Mg": "Magnesium brinner med ett extremt starkt vitt ljus. Det används i lättviktslegeringar för bilar och flygplan.",
+    "Al": "Aluminium är känt för sin låga vikt och korrosionsbeständighet. Det används i allt från läskburkar till flygplansskrov.",
+    "Si": "Kisel är fundamentet för modern elektronik. Halvledare gjorda av kisel utgör hjärtat i varje smartphone.",
+    "Ti": "Titan är lika starkt som stål men 45% lättare. Det används ofta i medicinska implantat och flygplan.",
+    "Fe": "Järn är vår viktigaste metall. Genom att blanda det med kol skapas stål, som bygger upp hela vår infrastruktur.",
+    "Cu": "Koppar leder elektricitet fantastiskt bra och är den viktigaste metallen för elledningar.",
+    "Au": "Guld oxiderar aldrig och leder ström bra, vilket gör det oumbärligt för tillförlitliga kontakter i datorer.",
+    "Pb": "Bly är mycket tätt. Det används som skydd mot röntgenstrålning och i bilbatterier.",
+    "U": "Uran är det tyngsta naturliga grundämnet och används som bränsle i kärnkraftverk."
 };
 
 function startApp(mode) {
     currentMode = mode;
     document.getElementById('start-page').classList.add('hidden');
     document.getElementById('fixed-ui').classList.remove('hidden');
-    document.getElementById('viewport').classList.remove('hidden');
     
+    // Punkt 2: Aktivera dimning om det är quiz
     const container = document.getElementById('table-container');
-    container.className = ""; // Rensa tidigare klasser
+    if(mode.startsWith('quiz')) container.classList.add('quiz-mode-active');
+    else container.classList.remove('quiz-mode-active');
+
+    document.getElementById('viewport').classList.remove('hidden');
+    document.getElementById('current-mode').innerText = mode === 'study' ? "Studera" : "Quiz";
     
-    // LOGIK FÖR DIMNING (Återställd enligt önskemål)
-    if(mode === 'quiz-name' || mode === 'quiz-multi') {
-        container.classList.add('dimmed', 'allow-clicks');
-    } else if (mode === 'quiz-symbol') {
-        container.classList.add('dimmed'); // Endast rätt element går att klicka
+    if(mode === 'quiz-symbol') {
+        document.getElementById('quiz-bar').classList.remove('hidden');
+        pickNewTarget();
+    } else if(mode === 'quiz-multi') {
+        document.getElementById('quiz-bar').classList.add('hidden');
+        renderTable();
+        setTimeout(startMultiQuiz, 300);
+    } else {
+        document.getElementById('quiz-bar').classList.add('hidden');
     }
-
-    document.getElementById('current-mode').innerText = 
-        mode === 'study' ? "Studera" : 
-        mode === 'quiz-symbol' ? "Hitta Symbol" : 
-        mode === 'quiz-name' ? "Namnge" : "Snabb-Quiz";
-    
-    document.getElementById('quiz-bar').classList.toggle('hidden', mode !== 'quiz-symbol');
-
     renderTable();
+}
+
+function startMultiQuiz() {
+    const randomItem = allElements[Math.floor(Math.random() * allElements.length)];
+    showInfo(randomItem);
+}
+
+function pickNewTarget() {
+    fetch('data.json').then(r => r.json()).then(data => {
+        const items = data.subjects[0].items;
+        targetElement = items[Math.floor(Math.random() * items.length)];
+        document.getElementById('quiz-question').innerText = `Klicka på: ${targetElement.name} (${targetElement.symbol})`;
+    });
 }
 
 function renderTable() {
@@ -73,7 +71,6 @@ function renderTable() {
         allElements = data.subjects[0].items;
         const container = document.getElementById('table-container');
         container.innerHTML = '';
-        
         allElements.forEach(item => {
             const div = document.createElement('div');
             const cat = item.category.toLowerCase().replace(/\s/g, "-");
@@ -82,19 +79,13 @@ function renderTable() {
             div.style.gridRow = item.pos[0];
             div.style.gridColumn = item.pos[1];
             
-            let symbolText = (currentMode === 'quiz-name') ? '?' : item.symbol;
-            div.innerHTML = `<span class="number">${item.number}</span><span class="symbol">${symbolText}</span>`;
+            let content = `<span class="number">${item.number}</span>`;
+            content += `<span class="symbol">${currentMode === 'quiz-name' ? '?' : item.symbol}</span>`;
             
-            // Fix: Explicit klickhanterare som alltid körs
-            div.onclick = (e) => {
-                e.stopPropagation();
-                handleElementClick(item);
-            };
+            div.innerHTML = content;
+            div.onclick = () => handleElementClick(item);
             container.appendChild(div);
         });
-
-        if(currentMode === 'quiz-symbol') pickNewTarget();
-        if(currentMode === 'quiz-multi') startMultiQuiz();
         updateZoom();
     });
 }
@@ -104,6 +95,10 @@ function handleElementClick(item) {
         if(item.symbol === targetElement.symbol) {
             document.getElementById(`el-${item.symbol}`).classList.add('completed');
             pickNewTarget();
+        } else {
+            const el = document.getElementById(`el-${item.symbol}`);
+            el.style.animation = "shake 0.3s";
+            setTimeout(() => el.style.animation = "", 300);
         }
     } else {
         showInfo(item);
@@ -113,86 +108,99 @@ function handleElementClick(item) {
 function showInfo(item) {
     currentItem = item;
     const overlay = document.getElementById('overlay');
-    overlay.classList.add('active'); // GÖR POPUP SYNLIG
-    
-    document.getElementById('success-overlay').classList.add('hidden');
-    document.getElementById('card-inner').classList.remove('is-flipped');
-    
     const inputArea = document.getElementById('quiz-input-area');
     const multiArea = document.getElementById('multi-choice-area');
     const flipBtn = document.getElementById('flip-btn-text');
+    const feedback = document.getElementById('success-feedback');
     
-    // Hantera visning baserat på läge
-    inputArea.classList.toggle('hidden', currentMode !== 'quiz-name');
-    multiArea.classList.toggle('hidden', currentMode !== 'quiz-multi');
-    flipBtn.classList.toggle('hidden', currentMode === 'quiz-multi');
+    feedback.classList.add('hidden');
+    document.getElementById('guest-input').value = "";
+    
+    // Punkt 3: Hantera flervals-quiz
+    if(currentMode === 'quiz-multi') {
+        inputArea.classList.add('hidden');
+        multiArea.classList.remove('hidden');
+        flipBtn.classList.add('hidden');
+        generateChoices(item);
+    } else if(currentMode === 'quiz-name') {
+        inputArea.classList.remove('hidden');
+        multiArea.classList.add('hidden');
+        flipBtn.classList.remove('hidden');
+    } else {
+        inputArea.classList.add('hidden');
+        multiArea.classList.add('hidden');
+        flipBtn.classList.remove('hidden');
+    }
 
-    if(currentMode === 'quiz-multi') generateChoices(item);
-
-    // Färgsättning
     const cat = item.category.toLowerCase().replace(/\s/g, "-");
-    const isDark = ["alkalimetall", "aktinid", "overgangsmetall", "lantanid", "ickemetall"].includes(cat);
-    document.getElementById('card-inner').className = `card ${isDark ? "light-text" : "dark-text"}`;
-    
     const colors = { ickemetall: "#4ade80", adelgas: "#fde047", alkalimetall: "#f87171", overgangsmetall: "#cbd5e1", halvmetall: "#7dd3fc", lantanid: "#f472b6", aktinid: "#fb7185" };
-    document.getElementById('card-f').style.backgroundColor = colors[cat] || "#fff";
-    document.getElementById('card-b').style.backgroundColor = colors[cat] || "#fff";
+    const bgColor = colors[cat] || "#ffffff";
+    const isDark = ["alkalimetall", "aktinid", "overgangsmetall", "lantanid", "ickemetall"].includes(cat);
+    
+    document.getElementById('card-f').style.backgroundColor = bgColor;
+    document.getElementById('card-b').style.backgroundColor = bgColor;
+    document.getElementById('card-inner').className = `card ${isDark ? "light-text" : "dark-text"}`;
 
     document.getElementById('front-content').innerHTML = `
-        <p style="font-size:14px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
-        <p style="font-size:60px; font-weight:900; margin:10px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
-        <p style="font-size:22px; font-weight:800; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
+        <p style="font-size:13px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
+        <p style="font-size:55px; font-weight:900; margin:2px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
+        <p style="font-size:20px; font-weight:700; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
     `;
 
-    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Information om användning kommer snart.";
-}
-
-function checkGuess() {
-    const val = document.getElementById('guest-input').value.trim().toLowerCase();
-    if(val === currentItem.name.toLowerCase()) {
-        document.getElementById('success-overlay').classList.remove('hidden');
-        document.getElementById(`el-${currentItem.symbol}`).classList.add('completed');
-        setTimeout(closePopup, 1200);
-        document.getElementById('guest-input').value = "";
-    }
+    document.getElementById('usage-text').innerHTML = `
+        <div style="font-weight:900; font-size:17px; margin-bottom:8px;">${item.name}</div>
+        ${elementFacts[item.symbol] || "Används inom industri och forskning."}
+    `;
+    
+    overlay.classList.remove('hidden');
+    document.getElementById('card-inner').classList.remove('is-flipped');
 }
 
 function generateChoices(correctItem) {
     const area = document.getElementById('multi-choice-area');
     area.innerHTML = '';
+    
     let choices = [correctItem.name];
     while(choices.length < 4) {
         let rand = allElements[Math.floor(Math.random() * allElements.length)].name;
         if(!choices.includes(rand)) choices.push(rand);
     }
     choices.sort(() => Math.random() - 0.5);
+
     choices.forEach(name => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.innerText = name;
         btn.onclick = () => {
             if(name === correctItem.name) {
-                btn.classList.add('correct');
-                document.getElementById('success-overlay').classList.remove('hidden');
+                document.getElementById('success-feedback').classList.remove('hidden');
                 document.getElementById(`el-${correctItem.symbol}`).classList.add('completed');
-                setTimeout(() => { closePopup(); startMultiQuiz(); }, 1200);
-            } else btn.classList.add('wrong');
+                setTimeout(() => { 
+                    overlay.classList.add('hidden');
+                    startMultiQuiz();
+                }, 1000);
+            } else {
+                btn.style.backgroundColor = "#ffcccc";
+            }
         };
         area.appendChild(btn);
     });
 }
 
-function startMultiQuiz() {
-    const randomItem = allElements[Math.floor(Math.random() * allElements.length)];
-    showInfo(randomItem);
+function checkGuess() {
+    const val = document.getElementById('guest-input').value.trim().toLowerCase();
+    const el = document.getElementById(`el-${currentItem.symbol}`);
+    if(val === currentItem.name.toLowerCase()) {
+        document.getElementById('success-feedback').classList.remove('hidden');
+        el.classList.add('completed');
+        if(currentMode === 'quiz-name') el.querySelector('.symbol').innerText = currentItem.symbol;
+        setTimeout(() => document.getElementById('overlay').classList.add('hidden'), 1000);
+    } else {
+        document.getElementById('guest-input').style.borderColor = "red";
+    }
 }
 
-function pickNewTarget() {
-    targetElement = allElements[Math.floor(Math.random() * allElements.length)];
-    document.getElementById('quiz-question').innerText = `Hitta: ${targetElement.name} (${targetElement.symbol})`;
-}
-
-function closePopup() { document.getElementById('overlay').classList.remove('active'); }
+function closePopup() { document.getElementById('overlay').classList.add('hidden'); }
 function updateZoom() { document.getElementById('table-container').style.transform = `scale(${currentZoom})`; }
 
 document.getElementById('zoom-in').onclick = () => { currentZoom += 0.1; updateZoom(); };
