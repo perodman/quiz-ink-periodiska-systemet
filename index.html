@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Kemi Pro</title>
+    <title>Kemi Pro - Periodiska Systemet</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -27,16 +27,18 @@
 
         <div id="info-overlay" class="hidden">
             <div class="flip-card" id="card-inner">
-                <div class="card-front">
+                <div class="card-front" id="card-f">
                     <button class="close-btn" id="close-info">&times;</button>
                     <div id="info-content-front"></div>
                     <button class="flip-btn" id="go-to-back">Mer info ➔</button>
                     <button id="start-item-quiz" class="primary-btn">Starta Quiz</button>
                 </div>
-                <div class="card-back">
+                <div class="card-back" id="card-b">
                     <button class="close-btn" id="close-info-back">&times;</button>
-                    <h3 id="back-title">Användning</h3>
-                    <p id="usage-text">Laddar...</p>
+                    <div class="card-body-back">
+                        <h3 id="back-title">Användning</h3>
+                        <p id="usage-text"></p>
+                    </div>
                     <button class="flip-btn" id="go-to-front">⬅ Tillbaka</button>
                 </div>
             </div>
