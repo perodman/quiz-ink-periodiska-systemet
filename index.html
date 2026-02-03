@@ -63,18 +63,23 @@
             <div class="card" id="card-inner">
                 <div class="card-face card-front" id="card-f">
                     <button class="close-x">&times;</button>
+                    <div id="success-feedback" class="feedback-icon hidden">👍</div>
                     <div id="front-content" class="content-center"></div>
                     <div id="quiz-input-area" class="hidden">
-                        <input type="text" id="guest-input" placeholder="Vad heter ämnet?">
+                        <div class="input-wrapper">
+                            <input type="text" id="guest-input" placeholder="Namn?">
+                        </div>
                         <button onclick="checkGuess()" class="guess-submit">Svara</button>
                     </div>
                     <button class="flip-trigger" id="flip-btn-text">Mer information ➔</button>
                 </div>
                 <div class="card-face card-back" id="card-b">
                     <button class="close-x">&times;</button>
-                    <div class="back-content">
-                        <h3>Användning</h3>
-                        <p id="usage-text"></p>
+                    <div class="back-layout">
+                        <div class="usage-header">💡 ANVÄNDNING</div>
+                        <div class="back-content">
+                            <p id="usage-text"></p>
+                        </div>
                     </div>
                     <button class="flip-trigger">⬅ Tillbaka</button>
                 </div>
@@ -83,8 +88,9 @@
     </div>
 
     <div id="viewport" class="hidden">
-        <div id="table-container"></div>
-        <div class="bottom-spacer"></div>
+        <div id="scroll-wrapper">
+            <div id="table-container"></div>
+        </div>
     </div>
 
     <script src="app.js"></script>
