@@ -2,56 +2,50 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kemi Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="reset-zoom" class="fixed-reset-btn" title="Återställ vy">
-        <span class="zoom-icon">🔍</span><span class="reset-arrow">↺</span>
-    </button>
-
-    <div id="app">
-        <header id="header">
-            <h1>Periodiska Systemet</h1>
-            <div class="mode-selector">
-                <button id="study-mode-btn" class="mode-toggle active">Studera</button>
-                <button id="quiz-mode-btn" class="mode-toggle">Quiz</button>
-            </div>
-        </header>
-        
-        <div id="grid-wrapper">
-            <div id="main-container"></div>
-        </div>
+    <div id="ui-layer">
+        <button id="reset-zoom" class="zoom-reset-fab">
+            <span class="icon">🔍</span>
+            <span class="arrow">↺</span>
+        </button>
 
         <div id="info-overlay" class="hidden">
             <div class="flip-card" id="card-inner">
                 <div class="card-front" id="card-f">
                     <button class="close-btn" id="close-info">&times;</button>
                     <div id="info-content-front"></div>
-                    <button class="flip-btn" id="go-to-back">Praktisk användning ➔</button>
+                    <button class="flip-btn" id="go-to-back">Användning ➔</button>
                     <button id="start-item-quiz" class="primary-btn">Starta Quiz</button>
                 </div>
                 <div class="card-back" id="card-b">
                     <button class="close-btn" id="close-info-back">&times;</button>
-                    <div class="card-content-wrapper">
-                        <h3 id="back-title">Användning</h3>
-                        <div class="usage-container">
-                            <p id="usage-text"></p>
-                        </div>
+                    <div class="usage-wrapper">
+                        <h3>Användning</h3>
+                        <p id="usage-text"></p>
                     </div>
                     <button class="flip-btn" id="go-to-front">⬅ Tillbaka</button>
                 </div>
             </div>
         </div>
-
-        <div id="quiz-overlay" class="hidden">
-            <div id="quiz-question">Fråga...</div>
-            <div class="options-container" id="quiz-options"></div>
-            <button id="exit-quiz" class="primary-btn" style="background:#64748b; margin-top:20px;">Avbryt</button>
-        </div>
     </div>
+
+    <div id="scroll-viewport">
+        <header id="main-header">
+            <h1>Periodiska Systemet</h1>
+            <div class="mode-selector">
+                <button id="study-mode-btn" class="active">Studera</button>
+                <button id="quiz-mode-btn">Quiz</button>
+            </div>
+        </header>
+        <div id="main-container"></div>
+        <div class="bottom-padding"></div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
