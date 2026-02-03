@@ -28,17 +28,12 @@
                 <div class="portal-card" onclick="startApp('quiz-symbol')">
                     <div class="card-icon">🧪</div>
                     <h3>Hitta Symbolen</h3>
-                    <p>Markera rätt plats i systemet.</p>
+                    <p>Hitta rätt plats i systemet.</p>
                 </div>
                 <div class="portal-card" onclick="startApp('quiz-name')">
                     <div class="card-icon">📝</div>
                     <h3>Namnge Ämnet</h3>
-                    <p>Skriv namnet på ämnet.</p>
-                </div>
-                <div class="portal-card full-width" onclick="startApp('quiz-multi')">
-                    <div class="card-icon">🏁</div>
-                    <h3>Snabb-Quiz</h3>
-                    <p>Flervalsfrågor om symboler & namn.</p>
+                    <p>Gissa namnet bakom frågetecknet.</p>
                 </div>
             </div>
         </div>
@@ -67,31 +62,19 @@
         <div id="overlay" class="hidden">
             <div class="card" id="card-inner">
                 <div class="card-face card-front" id="card-f">
-                    <button class="close-x" onclick="closePopup()">&times;</button>
-                    
-                    <div id="success-overlay" class="success-overlay hidden">👍</div>
-                    
+                    <button class="close-x">&times;</button>
                     <div id="front-content" class="content-center"></div>
-                    
                     <div id="quiz-input-area" class="hidden">
-                        <div class="input-wrapper">
-                            <input type="text" id="guest-input" placeholder="Namn?">
-                        </div>
+                        <input type="text" id="guest-input" placeholder="Vad heter ämnet?">
                         <button onclick="checkGuess()" class="guess-submit">Svara</button>
                     </div>
-                    
-                    <div id="multi-choice-area" class="hidden"></div>
-                    
                     <button class="flip-trigger" id="flip-btn-text">Mer information ➔</button>
                 </div>
-                
                 <div class="card-face card-back" id="card-b">
-                    <button class="close-x" onclick="closePopup()">&times;</button>
-                    <div class="back-layout">
-                        <div class="usage-header">💡 ANVÄNDNING</div>
-                        <div class="back-content">
-                            <p id="usage-text"></p>
-                        </div>
+                    <button class="close-x">&times;</button>
+                    <div class="back-content">
+                        <h3>Användning</h3>
+                        <p id="usage-text"></p>
                     </div>
                     <button class="flip-trigger">⬅ Tillbaka</button>
                 </div>
@@ -100,9 +83,8 @@
     </div>
 
     <div id="viewport" class="hidden">
-        <div id="scroll-wrapper">
-            <div id="table-container"></div>
-        </div>
+        <div id="table-container"></div>
+        <div class="bottom-spacer"></div>
     </div>
 
     <script src="app.js"></script>
