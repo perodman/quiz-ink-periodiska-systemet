@@ -1,15 +1,5 @@
 let currentData = [];
 
-// Faktadatabas
-const elementFacts = {
-    "H": "Väte är universums vanligaste ämne och bränslet i våra stjärnor.",
-    "He": "Helium används i allt från festballonger till att kyla magnetröntgen.",
-    "Li": "Litium är motorn i den gröna omställningen genom sina batterier.",
-    "C": "Kol är grunden för allt liv och finns i både diamanter och grafit.",
-    "O": "Syre är livsnödvändigt för andning och utgör en stor del av jordskorpan.",
-    "Fe": "Järn har byggt vår civilisation, från vikingatid till moderna skyskrapor."
-};
-
 const translations = {
     "overgangsmetall": "Övergångsmetall", "ickemetall": "Ickemetall", "adelgas": "Ädelgas",
     "alkalimetall": "Alkalimetall", "alkalisk-jordmetall": "Alkalisk jordmetall",
@@ -17,10 +7,32 @@ const translations = {
     "aktinid": "Aktinid", "metall": "Metall"
 };
 
-// Ladda in data
+// 1. SMART SKALNINGSFUNKTION (Löser Punkt 2)
+function autoScale() {
+    const table = document.getElementById('periodic-table');
+    const viewport = document.getElementById('table-viewport');
+    
+    // Systemets fasta storlek (18 kolumner á 60px + gap)
+    const tableWidth = (18 * 60) + (17 * 4);
+    const tableHeight = (10 * 60) + (9 * 4);
+    
+    // Tillgängligt utrymme
+    const availW = viewport.clientWidth - 20;
+    const availH = viewport.clientHeight - 20;
+    
+    // Räkna ut bästa skalningsfaktor
+    const scale = Math.min(availW / tableWidth, availH / tableHeight);
+    
+    // Applicera skalning
+    table.style.transform = `scale(${scale})`;
+}
+
+window.addEventListener('resize', autoScale);
+
+// 2. RENDERA DATA
 fetch('data.json').then(r => r.json()).then(data => {
     currentData = data.subjects[0].items;
-    const container = document.getElementById('main-container');
+    const table = document.getElementById('periodic-table');
     
     currentData.forEach(item => {
         const div = document.createElement('div');
@@ -29,37 +41,41 @@ fetch('data.json').then(r => r.json()).then(data => {
         div.style.gridRow = item.pos[0];
         div.style.gridColumn = item.pos[1];
         
+        // Punkt 3: Kontrast på siffror
         const darkCats = ["alkalimetall", "aktinid", "overgangsmetall", "metall", "lantanid"];
         const numClass = darkCats.includes(cat) ? "num-light" : "num-dark";
         
         div.innerHTML = `<span class="number ${numClass}">${item.number}</span><span class="symbol">${item.symbol}</span>`;
-        div.onclick = () => showInfoCard(item);
-        container.appendChild(div);
+        div.onclick = () => showInfo(item);
+        table.appendChild(div);
     });
+    
+    autoScale(); // Kör skalning efter laddning
 });
 
-function showInfoCard(item) {
+// 3. POPUP-LOGIK (Punkt 4, 5, 6)
+function showInfo(item) {
+    const overlay = document.getElementById('overlay');
     const cardF = document.getElementById('card-f');
     const cardB = document.getElementById('card-b');
     const cat = item.category.toLowerCase();
     
+    // Färgtema
     const colors = {
         ickemetall: "#4ade80", adelgas: "#fde047", alkalimetall: "#f87171",
-        "alkalisk-jordmetall": "#fb923c", halvmetall: "#93c5fd", halogen: "#c084fc",
-        overgangsmetall: "#cbd5e1", metall: "#94a3b8", lantanid: "#f472b6", aktinid: "#fb7185"
+        overgangsmetall: "#cbd5e1", lantanid: "#f472b6", aktinid: "#fb7185"
     };
-    
     const bgColor = colors[cat] || "#fff";
-    const isDark = ["alkalimetall", "aktinid", "metall", "overgangsmetall"].includes(cat);
+    const isDark = ["alkalimetall", "aktinid", "overgangsmetall"].includes(cat);
     const textClass = isDark ? "light-text" : "dark-text";
 
     [cardF, cardB].forEach(side => {
         side.style.backgroundColor = bgColor;
-        side.className = side.id === 'card-f' ? `card-front ${textClass}` : `card-back ${textClass}`;
+        side.className = side.id === 'card-f' ? `card-face card-front ${textClass}` : `card-face card-back ${textClass}`;
     });
 
-    // Framsida
-    document.getElementById('info-content-front').innerHTML = `
+    // Innehåll Punkt 5 (Centrerat)
+    document.getElementById('front-content').innerHTML = `
         <p style="font-size:70px; font-weight:900; margin:0; text-align:center;">${item.symbol}</p>
         <p style="font-size:24px; font-weight:700; margin:0; text-align:center;">${item.name}</p>
         <div class="card-info-box">
@@ -68,30 +84,22 @@ function showInfoCard(item) {
         </div>
     `;
 
-    // Baksida
-    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Används flitigt inom modern industri och teknisk utveckling.";
+    // Innehåll Punkt 6 (Centrerad användning)
+    document.getElementById('usage-text').innerText = "Viktigt grundämne i svensk industri.";
     
-    document.getElementById('info-overlay').classList.remove('hidden');
+    overlay.classList.remove('hidden');
     document.getElementById('card-inner').classList.remove('is-flipped');
 }
 
-// RESET-FUNKTION (PUNKT 3)
-document.getElementById('reset-zoom').onclick = () => {
-    // 1. Återställ scrollposition
-    document.getElementById('scroll-viewport').scrollTo({top: 0, left: 0, behavior: 'smooth'});
-    
-    // 2. Tvinga webbläsaren att nollställa sin hårdvaru-zoom
-    const viewport = document.querySelector('meta[name="viewport"]');
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-    
-    // 3. Släpp begränsningen efter en kort stund så användaren kan zooma igen
-    setTimeout(() => {
-        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
-    }, 300);
-};
+// Kontroller
+document.querySelectorAll('.close-x').forEach(btn => {
+    btn.onclick = () => document.getElementById('overlay').classList.add('hidden');
+});
 
-// Navigering i popup
-document.getElementById('close-info').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
-document.getElementById('close-info-back').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
-document.getElementById('go-to-back').onclick = () => document.getElementById('card-inner').classList.add('is-flipped');
-document.getElementById('go-to-front').onclick = () => document.getElementById('card-inner').classList.remove('is-flipped');
+document.querySelectorAll('.flip-trigger').forEach(btn => {
+    btn.onclick = () => document.getElementById('card-inner').classList.toggle('is-flipped');
+});
+
+document.getElementById('reset-view').onclick = () => {
+    autoScale(); // Tvingar systemet att passa skärmen igen
+};
