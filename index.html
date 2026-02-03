@@ -28,12 +28,17 @@
                 <div class="portal-card" onclick="startApp('quiz-symbol')">
                     <div class="card-icon">🧪</div>
                     <h3>Hitta Symbolen</h3>
-                    <p>Hitta rätt plats i systemet.</p>
+                    <p>Markera rätt plats i systemet.</p>
                 </div>
                 <div class="portal-card" onclick="startApp('quiz-name')">
                     <div class="card-icon">📝</div>
                     <h3>Namnge Ämnet</h3>
-                    <p>Gissa namnet bakom frågetecknet.</p>
+                    <p>Skriv namnet på ämnet.</p>
+                </div>
+                <div class="portal-card full-width" onclick="startApp('quiz-multi')">
+                    <div class="card-icon">🏁</div>
+                    <h3>Snabb-Quiz</h3>
+                    <p>Flervalsfrågor om symboler & namn.</p>
                 </div>
             </div>
         </div>
@@ -62,7 +67,7 @@
         <div id="overlay" class="hidden">
             <div class="card" id="card-inner">
                 <div class="card-face card-front" id="card-f">
-                    <button class="close-x">&times;</button>
+                    <button class="close-x" onclick="closePopup()">&times;</button>
                     <div id="success-feedback" class="feedback-icon hidden">👍</div>
                     <div id="front-content" class="content-center"></div>
                     <div id="quiz-input-area" class="hidden">
@@ -71,10 +76,12 @@
                         </div>
                         <button onclick="checkGuess()" class="guess-submit">Svara</button>
                     </div>
+                    <div id="multi-choice-area" class="hidden"></div>
+                    
                     <button class="flip-trigger" id="flip-btn-text">Mer information ➔</button>
                 </div>
                 <div class="card-face card-back" id="card-b">
-                    <button class="close-x">&times;</button>
+                    <button class="close-x" onclick="closePopup()">&times;</button>
                     <div class="back-layout">
                         <div class="usage-header">💡 ANVÄNDNING</div>
                         <div class="back-content">
