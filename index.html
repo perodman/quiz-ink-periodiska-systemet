@@ -3,25 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kemi Pro - Smart View</title>
+    <title>Kemi Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="app-container">
-        <header id="header">
-            <h1>Periodiska Systemet</h1>
-            <div class="mode-selector">
-                <button id="study-btn" class="active">Studera</button>
-                <button id="quiz-btn">Quiz</button>
-            </div>
-            <button id="reset-view" class="reset-btn">🔍 ↺</button>
-        </header>
-
-        <div id="table-viewport">
-            <div id="periodic-table">
-                </div>
+    <div id="fixed-ui">
+        <div class="header-minimal">
+            <button id="zoom-out" class="zoom-ctrl">−</button>
+            <button id="reset-btn" class="zoom-ctrl">Återställ</button>
+            <button id="zoom-in" class="zoom-ctrl">+</button>
         </div>
 
         <div id="overlay" class="hidden">
@@ -31,7 +23,7 @@
                     <div id="front-content"></div>
                     <button class="flip-trigger">Användning ➔</button>
                 </div>
-                <div class="card-face card-back" id="card-b">
+                <div class="card-back card-face" id="card-b">
                     <button class="close-x">&times;</button>
                     <div class="back-content">
                         <h3>Användning</h3>
@@ -41,6 +33,12 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="viewport">
+        <div id="table-container">
+            </div>
+        <div class="spacer"></div>
     </div>
 
     <script src="app.js"></script>
