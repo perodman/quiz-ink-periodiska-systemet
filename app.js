@@ -1,45 +1,23 @@
 let currentData = [];
 
+// Faktadatabas
 const elementFacts = {
-    "H": "Väte är universums vanligaste ämne och bränslet i stjärnor.",
-    "He": "Används i ballonger och för att kyla supraledare.",
-    "Li": "Det lättaste metalliska grundämnet, avgörande för batterier.",
-    "Fe": "Grundpelaren i mänsklig civilisation genom stålproduktion.",
-    "Au": "En ädelmetall som aldrig korroderar, perfekt för elektronik.",
-    "Cu": "Oumbärlig för elnätet tack vare sin ledningsförmåga."
+    "H": "Väte är universums vanligaste ämne och bränslet i våra stjärnor.",
+    "He": "Helium används i allt från festballonger till att kyla magnetröntgen.",
+    "Li": "Litium är motorn i den gröna omställningen genom sina batterier.",
+    "C": "Kol är grunden för allt liv och finns i både diamanter och grafit.",
+    "O": "Syre är livsnödvändigt för andning och utgör en stor del av jordskorpan.",
+    "Fe": "Järn har byggt vår civilisation, från vikingatid till moderna skyskrapor."
 };
 
-function adjustScale() {
-    const container = document.getElementById('main-container');
-    const wrapper = document.getElementById('grid-wrapper');
-    
-    container.style.transform = "scale(1)";
-    container.style.height = "auto";
-    
-    if (window.innerWidth > window.innerHeight) {
-        const systemWidth = (18 * 55) + (17 * 4);
-        const availableWidth = window.innerWidth - 80;
-        
-        if (availableWidth < systemWidth) {
-            const scale = availableWidth / systemWidth;
-            container.style.transform = `scale(${scale})`;
-            
-            // VIKTIGT: Beräkna containerns nya höjd så att scrollen fungerar
-            const systemHeight = (10 * 55) + (9 * 4);
-            const scaledHeight = systemHeight * scale;
-            // Vi sätter containerns höjd till den faktiska skalade höjden plus marginal
-            container.style.height = `${systemHeight}px`; 
-            wrapper.style.minHeight = "auto";
-        }
-    } else {
-        container.style.height = "auto";
-    }
-}
+const translations = {
+    "overgangsmetall": "Övergångsmetall", "ickemetall": "Ickemetall", "adelgas": "Ädelgas",
+    "alkalimetall": "Alkalimetall", "alkalisk-jordmetall": "Alkalisk jordmetall",
+    "halvmetall": "Halvmetall", "halogen": "Halogen", "lantanid": "Lantanid",
+    "aktinid": "Aktinid", "metall": "Metall"
+};
 
-window.addEventListener('resize', adjustScale);
-window.addEventListener('orientationchange', () => setTimeout(adjustScale, 300));
-
-// Hämta data och rendera
+// Ladda in data
 fetch('data.json').then(r => r.json()).then(data => {
     currentData = data.subjects[0].items;
     const container = document.getElementById('main-container');
@@ -58,7 +36,6 @@ fetch('data.json').then(r => r.json()).then(data => {
         div.onclick = () => showInfoCard(item);
         container.appendChild(div);
     });
-    adjustScale();
 });
 
 function showInfoCard(item) {
@@ -72,27 +49,19 @@ function showInfoCard(item) {
         overgangsmetall: "#cbd5e1", metall: "#94a3b8", lantanid: "#f472b6", aktinid: "#fb7185"
     };
     
-    const bgColor = colors[cat] || "#ffffff";
+    const bgColor = colors[cat] || "#fff";
     const isDark = ["alkalimetall", "aktinid", "metall", "overgangsmetall"].includes(cat);
-    const textColorClass = isDark ? "light-text" : "dark-text";
+    const textClass = isDark ? "light-text" : "dark-text";
 
     [cardF, cardB].forEach(side => {
         side.style.backgroundColor = bgColor;
-        side.className = `card-front ${textColorClass}`;
-        if(side.id === 'card-b') side.className = `card-back ${textColorClass}`;
+        side.className = side.id === 'card-f' ? `card-front ${textClass}` : `card-back ${textClass}`;
     });
-
-    const translations = {
-        "overgangsmetall": "Övergångsmetall", "ickemetall": "Ickemetall", "adelgas": "Ädelgas",
-        "alkalimetall": "Alkalimetall", "alkalisk-jordmetall": "Alkalisk jordmetall",
-        "halvmetall": "Halvmetall", "halogen": "Halogen", "lantanid": "Lantanid",
-        "aktinid": "Aktinid", "metall": "Metall"
-    };
 
     // Framsida
     document.getElementById('info-content-front').innerHTML = `
-        <p class="card-symbol">${item.symbol}</p>
-        <p class="card-name">${item.name}</p>
+        <p style="font-size:70px; font-weight:900; margin:0; text-align:center;">${item.symbol}</p>
+        <p style="font-size:24px; font-weight:700; margin:0; text-align:center;">${item.name}</p>
         <div class="card-info-box">
             <div class="info-item"><span>Atomnummer</span> <strong>${item.number}</strong></div>
             <div class="info-item"><span>Kategori</span> <strong>${translations[cat] || cat}</strong></div>
@@ -100,20 +69,29 @@ function showInfoCard(item) {
     `;
 
     // Baksida
-    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Detta grundämne används flitigt inom svensk industri och teknisk utveckling.";
+    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Används flitigt inom modern industri och teknisk utveckling.";
     
     document.getElementById('info-overlay').classList.remove('hidden');
     document.getElementById('card-inner').classList.remove('is-flipped');
 }
 
-// Kontroller
-document.getElementById('go-to-back').onclick = () => document.getElementById('card-inner').classList.add('is-flipped');
-document.getElementById('go-to-front').onclick = () => document.getElementById('card-inner').classList.remove('is-flipped');
+// RESET-FUNKTION (PUNKT 3)
+document.getElementById('reset-zoom').onclick = () => {
+    // 1. Återställ scrollposition
+    document.getElementById('scroll-viewport').scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    
+    // 2. Tvinga webbläsaren att nollställa sin hårdvaru-zoom
+    const viewport = document.querySelector('meta[name="viewport"]');
+    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+    
+    // 3. Släpp begränsningen efter en kort stund så användaren kan zooma igen
+    setTimeout(() => {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+    }, 300);
+};
+
+// Navigering i popup
 document.getElementById('close-info').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
 document.getElementById('close-info-back').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
-
-document.getElementById('reset-zoom').onclick = () => {
-    // Scrolla till toppen
-    document.getElementById('grid-wrapper').scrollTo({top: 0, left: 0, behavior: 'smooth'});
-    adjustScale();
-};
+document.getElementById('go-to-back').onclick = () => document.getElementById('card-inner').classList.add('is-flipped');
+document.getElementById('go-to-front').onclick = () => document.getElementById('card-inner').classList.remove('is-flipped');
