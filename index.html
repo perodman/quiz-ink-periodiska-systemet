@@ -14,23 +14,26 @@
             <div class="portal-badge">KEMI</div>
             <h1>Periodiska Systemet</h1>
             
+            <div class="portal-section-title">STUDIER</div>
             <div class="portal-grid">
                 <div class="portal-card full-width" onclick="startApp('study')">
                     <div class="card-icon">📖</div>
                     <h3>Studieläge</h3>
                     <p>Utforska alla ämnen och deras användning.</p>
                 </div>
-                
+            </div>
+
+            <div class="portal-section-title">QUIZ</div>
+            <div class="portal-grid">
                 <div class="portal-card" onclick="startApp('quiz-symbol')">
                     <div class="card-icon">🧪</div>
                     <h3>Hitta Symbolen</h3>
-                    <p>Var ligger ämnet?</p>
+                    <p>Hitta rätt plats i systemet.</p>
                 </div>
-                
                 <div class="portal-card" onclick="startApp('quiz-name')">
                     <div class="card-icon">📝</div>
                     <h3>Namnge Ämnet</h3>
-                    <p>Vad heter symbolen?</p>
+                    <p>Gissa namnet bakom frågetecknet.</p>
                 </div>
             </div>
         </div>
@@ -42,6 +45,10 @@
             <h2 id="main-title">Periodiska Systemet</h2>
             <div class="mode-indicator" id="current-mode">Studera</div>
         </header>
+
+        <div id="quiz-bar" class="hidden">
+            <span id="quiz-question">Letar efter: ...</span>
+        </div>
 
         <div class="floating-zoom">
             <span class="zoom-label">ZOOM</span>
@@ -57,16 +64,16 @@
                 <div class="card-face card-front" id="card-f">
                     <button class="close-x">&times;</button>
                     <div id="front-content" class="content-center"></div>
-                    <button class="flip-trigger">Mer information ➔</button>
+                    <div id="quiz-input-area" class="hidden">
+                        <input type="text" id="guest-input" placeholder="Vad heter ämnet?">
+                        <button onclick="checkGuess()">Svara</button>
+                    </div>
+                    <button class="flip-trigger" id="flip-btn-text">Mer information ➔</button>
                 </div>
                 <div class="card-face card-back" id="card-b">
                     <button class="close-x">&times;</button>
-                    <div class="back-design-header">
-                        <div class="back-icon-circle">💡</div>
-                    </div>
-                    <div class="back-content-wrapper">
+                    <div class="back-content">
                         <h3>Användning</h3>
-                        <div class="usage-divider"></div>
                         <p id="usage-text"></p>
                     </div>
                     <button class="flip-trigger">⬅ Tillbaka</button>
