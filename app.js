@@ -1,52 +1,30 @@
-let currentZoom = 1.0;
+let currentZoom = 0.7;
 let currentMode = 'study';
 let targetElement = null;
 let currentItem = null;
+let allElements = [];
 
 const elementFacts = {
     "H": "Väte är universums vanligaste ämne. Det används som bränsle i rymdraketer och är avgörande för produktion av ammoniak till konstgödsel.",
-    "He": "Helium är inte bara för ballonger; dess extremt låga kokpunkt gör det oumbärligt för att kyla supraledande magneter i MR-kameror.",
-    "Li": "Litium är ryggraden i modern bärbar teknik och elbilar tack vare dess förmåga att lagra stora mängder energi i lätta batterier.",
-    "Be": "Beryllium är lättare än aluminium men mycket styvare. Det används i rymdteleskop, som James Webb, och i delar till stridsflygplan.",
-    "B": "Bor är en viktig ingrediens i värmetåligt borosilikatglas (Pyrex) och används som neutronabsorbent i kärnreaktorer.",
-    "C": "Kol är livets byggsten. Det bildar allt från mjuka grafitstift i pennor till världens hårdaste naturliga material: diamanten.",
+    "He": "Helium används för att kyla supraledande magneter i MR-kameror på sjukhus, tack vare dess extremt låga kokpunkt.",
+    "Li": "Litium är ryggraden i modern bärbar teknik och elbilar tack vare dess förmåga att lagra energi i lätta batterier.",
+    "Be": "Beryllium är lättare än aluminium men styvare än stål. Det används i rymdteleskop och stridsflygplan.",
+    "B": "Bor gör glas värmetåligt (Pyrex) och är en viktig ingrediens i tvättmedel och neutronabsorbenter.",
+    "C": "Kol är livets byggsten. Det bildar allt från mjuka grafitstift i pennor till världens hårdaste diamant.",
     "N": "Kväve utgör 78% av luften vi andas. I flytande form används det för att frysa mat snabbt och för att bevara biologiska prover.",
     "O": "Syre krävs för förbränning och för nästan allt liv. Inom industrin används det för att tillverka stål och plast.",
-    "F": "Fluor är det mest reaktiva grundämnet. Det skyddar våra tänder i form av fluorid och används i non-stick beläggningar som Teflon.",
-    "Ne": "Neon ger ett karaktäristiskt röd-orange ljus i urladdningsrör. Det används främst i reklamskyltar och högspänningsindikatorer.",
-    "Na": "Natrium är en mjuk metall som reagerar våldsamt med vatten. Det är en av de två komponenterna i vanligt bordssalt.",
+    "F": "Fluor är det mest reaktiva grundämnet. Det skyddar våra tänder i form av fluorid och används i non-stick beläggningar.",
+    "Ne": "Neon ger ett karaktäristiskt röd-orange ljus i urladdningsrör. Det används främst i reklamskyltar.",
+    "Na": "Natrium är en mjuk metall som reagerar våldsamt med vatten. Det är en av komponenterna i vanligt bordssalt.",
     "Mg": "Magnesium brinner med ett extremt starkt vitt ljus. Det används i lättviktslegeringar för bilar och flygplan.",
     "Al": "Aluminium är känt för sin låga vikt och korrosionsbeständighet. Det används i allt från läskburkar till flygplansskrov.",
-    "Si": "Kisel är fundamentet för modern elektronik. Halvledare gjorda av kisel utgör hjärtat i varje smartphone och dator.",
-    "P": "Fosfor är nödvändigt för DNA och benvävnad. Industriellt används det främst i gödningsmedel och i tändsticksplån.",
-    "S": "Svavel används för att vulkanisera gummi (göra det hårt) och för att tillverka svavelsyra, världens mest använda industrikemikalie.",
-    "Cl": "Klor är ett effektivt desinfektionsmedel för dricksvatten och simbassänger, och är en viktig del i PVC-plast.",
-    "Ar": "Argon är en ädelgas som används som skyddsgas vid svetsning för att förhindra att den heta metallen reagerar med luft.",
-    "K": "Kalium är livsviktigt för nervsystemet. Det används i stora mängder som gödsel för att hjälpa växter att växa.",
-    "Ca": "Kalcium bygger upp våra tänder och skelett. Det används också som ett legeringsämne för att ta bort föroreningar från metaller.",
-    "Ti": "Titan är lika starkt som stål men 45% lättare. Det är extremt korrosionsbeständigt och används ofta i medicinska implantat.",
-    "Cr": "Krom ger rostfritt stål dess glans och motståndskraft mot rost. Det används också för att ge bilar en skinande yta.",
-    "Mn": "Mangan är avgörande för stålproduktion eftersom det tar bort svavel och syre, vilket gör stålet hårdare och mer hållbart.",
+    "Si": "Kisel är fundamentet för modern elektronik. Halvledare gjorda av kisel utgör hjärtat i varje smartphone.",
+    "Ti": "Titan är lika starkt som stål men 45% lättare. Det används ofta i medicinska implantat och flygplan.",
     "Fe": "Järn är vår viktigaste metall. Genom att blanda det med kol skapas stål, som bygger upp hela vår infrastruktur.",
-    "Co": "Kobolt används i slitstarka legeringar och är en nyckelkomponent i batterier för elbilar och jetmotorer.",
-    "Ni": "Nickel används främst i rostfritt stål och i uppladdningsbara batterier. Det ger också mynt en silverliknande yta.",
-    "Cu": "Koppar leder elektricitet fantastiskt bra. Det är den viktigaste metallen för elledningar, generatorer och datorer.",
-    "Zn": "Zink används främst för att 'galvanisera' stål, vilket innebär att man lägger på ett skyddande lager som förhindrar rost.",
-    "Ga": "Gallium smälter i din hand. Det används främst i halvledare för LED-lampor och mikrovågor.",
-    "Ge": "Germanium var den första metallen som användes i transistorer. Idag används det främst i fiberoptik och nattkikare.",
-    "As": "Arsenik är känt som ett gift, men i små mängder används det inom elektronik för att förändra ledningsförmågan hos halvledare.",
-    "Se": "Selen är ljuskänsligt och används i fotoceller och solceller. Det är också ett viktigt spårämne för hälsan.",
-    "Br": "Brom används i flamskyddsmedel för att göra plaster mindre brandfarliga och i vissa läkemedel.",
-    "Kr": "Krypton används i energieffektiva fönster (isolerglas) och i högpresterande glödlampor och lasrar.",
-    "Ag": "Silver leder elektricitet bäst av alla grundämnen. Det används i högkvalitativa kontakter och i solpaneler.",
-    "Sn": "Tenn används för att belägga andra metaller för att förhindra korrosion, och är en huvudkomponent i lödtenn.",
-    "I": "Jod är nödvändigt för sköldkörteln. Inom medicin används det som ett effektivt antiseptiskt medel för sår.",
-    "Xe": "Xenon ger ett intensivt vitt ljus och används i bilstrålkastare, biografer och i jonmotorer för rymdfarkoster.",
-    "W": "Volfram (Tungsten) har den högsta smältpunkten av alla metaller. Det används i glödtrådar och i borrverktyg.",
-    "Au": "Guld oxiderar aldrig och leder ström bra, vilket gör det oumbärligt för tillförlitliga kontakter i datorer och mobiler.",
-    "Hg": "Kvicksilver är den enda metallen som är flytande vid rumstemperatur. Det används i vissa vetenskapliga instrument.",
-    "Pb": "Bly är mycket tätt och mjukt. Det används som skydd mot röntgenstrålning och i traditionella bilbatterier.",
-    "U": "Uran är det tyngsta naturliga grundämnet. Det används som bränsle i kärnkraftverk för att producera el."
+    "Cu": "Koppar leder elektricitet fantastiskt bra och är den viktigaste metallen för elledningar.",
+    "Au": "Guld oxiderar aldrig och leder ström bra, vilket gör det oumbärligt för tillförlitliga kontakter i datorer.",
+    "Pb": "Bly är mycket tätt. Det används som skydd mot röntgenstrålning och i bilbatterier.",
+    "U": "Uran är det tyngsta naturliga grundämnet och används som bränsle i kärnkraftverk."
 };
 
 function startApp(mode) {
@@ -55,28 +33,29 @@ function startApp(mode) {
     document.getElementById('fixed-ui').classList.remove('hidden');
     document.getElementById('viewport').classList.remove('hidden');
     
+    // Punkt 1: Återställ layout (ingen utgråning)
+    document.getElementById('table-container').classList.remove('quiz-mode-active');
+    document.getElementById('current-mode').innerText = mode === 'study' ? "Studera" : "Quiz";
+    
     if(mode === 'quiz-symbol') {
         document.getElementById('quiz-bar').classList.remove('hidden');
         pickNewTarget();
+    } else if(mode === 'quiz-multi') {
+        document.getElementById('quiz-bar').classList.add('hidden');
+        renderTable(); 
+        setTimeout(startMultiQuiz, 300);
     } else {
         document.getElementById('quiz-bar').classList.add('hidden');
     }
     renderTable();
 }
 
-function pickNewTarget() {
-    fetch('data.json').then(r => r.json()).then(data => {
-        const items = data.subjects[0].items;
-        targetElement = items[Math.floor(Math.random() * items.length)];
-        document.getElementById('quiz-question').innerText = `Klicka på: ${targetElement.name} (${targetElement.symbol})`;
-    });
-}
-
 function renderTable() {
     fetch('data.json').then(r => r.json()).then(data => {
+        allElements = data.subjects[0].items;
         const container = document.getElementById('table-container');
         container.innerHTML = '';
-        data.subjects[0].items.forEach(item => {
+        allElements.forEach(item => {
             const div = document.createElement('div');
             const cat = item.category.toLowerCase().replace(/\s/g, "-");
             div.className = `element ${cat}`;
@@ -85,11 +64,8 @@ function renderTable() {
             div.style.gridColumn = item.pos[1];
             
             let content = `<span class="number">${item.number}</span>`;
-            if(currentMode === 'quiz-name') {
-                content += `<span class="symbol">?</span>`;
-            } else {
-                content += `<span class="symbol">${item.symbol}</span>`;
-            }
+            // I Namnge Ämnet döljer vi symbolen, annars visas den (Hitta Symbolen)
+            content += `<span class="symbol">${currentMode === 'quiz-name' ? '?' : item.symbol}</span>`;
             
             div.innerHTML = content;
             div.onclick = () => handleElementClick(item);
@@ -99,16 +75,16 @@ function renderTable() {
     });
 }
 
+function pickNewTarget() {
+    targetElement = allElements[Math.floor(Math.random() * allElements.length)];
+    document.getElementById('quiz-question').innerText = `Hitta: ${targetElement.name} (${targetElement.symbol})`;
+}
+
 function handleElementClick(item) {
     if(currentMode === 'quiz-symbol') {
         if(item.symbol === targetElement.symbol) {
-            document.getElementById(`el-${item.symbol}`).classList.add('correct');
-            setTimeout(pickNewTarget, 800);
-        } else {
-            document.getElementById(`el-${item.symbol}`).classList.add('wrong');
-            setTimeout(() => {
-                document.getElementById(`el-${item.symbol}`).classList.remove('wrong');
-            }, 500);
+            document.getElementById(`el-${item.symbol}`).classList.add('completed');
+            pickNewTarget();
         }
     } else {
         showInfo(item);
@@ -119,59 +95,111 @@ function showInfo(item) {
     currentItem = item;
     const overlay = document.getElementById('overlay');
     const inputArea = document.getElementById('quiz-input-area');
+    const multiArea = document.getElementById('multi-choice-area');
     const flipBtn = document.getElementById('flip-btn-text');
     
-    if(currentMode === 'quiz-name') {
+    document.getElementById('success-overlay').classList.add('hidden');
+    document.getElementById('guest-input').value = "";
+    
+    if(currentMode === 'quiz-multi') {
+        inputArea.classList.add('hidden');
+        multiArea.classList.remove('hidden');
+        flipBtn.classList.add('hidden');
+        generateChoices(item);
+    } else if(currentMode === 'quiz-name') {
         inputArea.classList.remove('hidden');
-        flipBtn.innerText = "Tjuvkika ➔";
+        multiArea.classList.add('hidden');
+        flipBtn.classList.remove('hidden');
     } else {
         inputArea.classList.add('hidden');
-        flipBtn.innerText = "Mer information ➔";
+        multiArea.classList.add('hidden');
+        flipBtn.classList.remove('hidden');
     }
 
     const cat = item.category.toLowerCase().replace(/\s/g, "-");
     const colors = { ickemetall: "#4ade80", adelgas: "#fde047", alkalimetall: "#f87171", overgangsmetall: "#cbd5e1", halvmetall: "#7dd3fc", lantanid: "#f472b6", aktinid: "#fb7185" };
     const bgColor = colors[cat] || "#ffffff";
-
+    const isDark = ["alkalimetall", "aktinid", "overgangsmetall", "lantanid", "ickemetall"].includes(cat);
+    
     document.getElementById('card-f').style.backgroundColor = bgColor;
     document.getElementById('card-b').style.backgroundColor = bgColor;
+    document.getElementById('card-inner').className = `card ${isDark ? "light-text" : "dark-text"}`;
 
+    // Punkt 4: Symmetrisk centrerad framsida
     document.getElementById('front-content').innerHTML = `
-        <p style="font-size:60px; font-weight:900; margin:0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
-        <p style="font-size:22px; font-weight:700; margin:0;">${currentMode === 'quiz-name' ? '???' : item.name}</p>
+        <div class="content-center">
+            <p style="font-size:14px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
+            <p style="font-size:65px; font-weight:900; margin:10px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
+            <p style="font-size:22px; font-weight:800; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
+        </div>
     `;
 
     document.getElementById('usage-text').innerHTML = `
-        <div style="font-weight:900; font-size:18px; margin-bottom:10px;">${item.name} (${item.symbol})</div>
-        ${elementFacts[item.symbol] || "Detta grundämne används flitigt inom specialiserad industri och avancerad forskning världen över."}
+        <div style="font-weight:900; font-size:18px; margin-bottom:10px;">${item.name}</div>
+        ${elementFacts[item.symbol] || "Används inom modern industri och forskning."}
     `;
     
-    overlay.classList.remove('hidden');
+    overlay.classList.add('active'); // Punkt 6: Mjuk animation in
     document.getElementById('card-inner').classList.remove('is-flipped');
+}
+
+function generateChoices(correctItem) {
+    const area = document.getElementById('multi-choice-area');
+    area.innerHTML = '';
+    let choices = [correctItem.name];
+    while(choices.length < 4) {
+        let rand = allElements[Math.floor(Math.random() * allElements.length)].name;
+        if(!choices.includes(rand)) choices.push(rand);
+    }
+    choices.sort(() => Math.random() - 0.5);
+
+    choices.forEach(name => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = name;
+        btn.onclick = () => {
+            if(name === correctItem.name) {
+                btn.classList.add('correct-choice'); // Punkt 5: Grön vid rätt
+                document.getElementById('success-overlay').classList.remove('hidden');
+                document.getElementById(`el-${correctItem.symbol}`).classList.add('completed');
+                setTimeout(() => { closePopup(); startMultiQuiz(); }, 1200);
+            } else {
+                btn.classList.add('wrong-choice'); // Punkt 5: Röd vid fel
+            }
+        };
+        area.appendChild(btn);
+    });
 }
 
 function checkGuess() {
     const val = document.getElementById('guest-input').value.trim().toLowerCase();
     const el = document.getElementById(`el-${currentItem.symbol}`);
     if(val === currentItem.name.toLowerCase()) {
-        el.classList.add('correct');
-        el.querySelector('.symbol').innerText = currentItem.symbol;
-        document.getElementById('overlay').classList.add('hidden');
-        document.getElementById('guest-input').value = "";
+        document.getElementById('success-overlay').classList.remove('hidden');
+        el.classList.add('completed');
+        if(currentMode === 'quiz-name') el.querySelector('.symbol').innerText = currentItem.symbol;
+        setTimeout(closePopup, 1200);
     } else {
-        const input = document.getElementById('guest-input');
-        input.style.borderColor = "red";
-        setTimeout(() => { input.style.borderColor = "#ccc"; }, 1000);
+        document.getElementById('guest-input').style.borderColor = "#ef4444";
+        setTimeout(() => document.getElementById('guest-input').style.borderColor = "rgba(0,0,0,0.1)", 1000);
     }
 }
 
+function startMultiQuiz() {
+    const randomItem = allElements[Math.floor(Math.random() * allElements.length)];
+    showInfo(randomItem);
+}
+
+function closePopup() {
+    const overlay = document.getElementById('overlay');
+    overlay.classList.remove('active'); // Punkt 6: Mjuk animation ut
+}
+
 function updateZoom() {
-    const table = document.getElementById('table-container');
-    table.style.transform = `scale(${currentZoom})`;
+    document.getElementById('table-container').style.transform = `scale(${currentZoom})`;
 }
 
 document.getElementById('zoom-in').onclick = () => { currentZoom += 0.1; updateZoom(); };
-document.getElementById('zoom-out').onclick = () => { if(currentZoom > 0.4) currentZoom -= 0.1; updateZoom(); };
-document.getElementById('reset-btn').onclick = () => { currentZoom = 1.0; updateZoom(); };
-document.querySelectorAll('.close-x').forEach(btn => btn.onclick = () => document.getElementById('overlay').classList.add('hidden'));
+document.getElementById('zoom-out').onclick = () => { if(currentZoom > 0.3) currentZoom -= 0.1; updateZoom(); };
+document.getElementById('reset-btn').onclick = () => { currentZoom = 0.7; updateZoom(); };
 document.querySelectorAll('.flip-trigger').forEach(btn => btn.onclick = () => document.getElementById('card-inner').classList.toggle('is-flipped'));
