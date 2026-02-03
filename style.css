@@ -1,4 +1,3 @@
-/* Ersätt hela din style.css */
 body {
     font-family: 'Inter', sans-serif;
     margin: 0; background: #f8fafc; color: #1e293b;
@@ -6,7 +5,7 @@ body {
     overflow: hidden; touch-action: manipulation;
 }
 
-/* 1. ROTATIONS-NOTIS (Flyttad till botten för att inte störa) */
+/* ROTATIONS-NOTIS */
 #rotation-notice {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: #1e293b; color: white; padding: 8px 16px; border-radius: 30px;
@@ -16,33 +15,38 @@ body {
 @media (orientation: landscape) { #rotation-notice { display: none; } }
 
 /* HEADER */
-#header { padding: 10px; background: white; border-bottom: 1px solid #e2e8f0; }
+#header { padding: 10px; background: white; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
 .header-content { display: flex; flex-direction: column; align-items: center; gap: 5px; }
 h1 { font-size: 18px; margin: 0; font-weight: 900; letter-spacing: -0.5px; }
 
 .mode-selector { display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 10px; }
-.mode-toggle { border: none; padding: 6px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; background: transparent; transition: 0.2s; }
+.mode-toggle { border: none; padding: 6px 16px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer; background: transparent; }
 .mode-toggle.active { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #3b82f6; }
 
-/* GRID */
-#grid-wrapper { flex: 1; overflow: auto; padding: 15px; }
-#main-container { display: grid; grid-template-columns: repeat(18, 55px); grid-template-rows: repeat(10, 55px); gap: 4px; margin: 0 auto; width: fit-content; }
+/* GRID & SCROLL */
+#grid-wrapper { flex: 1; overflow: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
+#main-container { 
+    display: grid; grid-template-columns: repeat(18, 55px); 
+    grid-template-rows: repeat(10, 55px); gap: 4px; 
+    margin: 0 auto; width: fit-content;
+    transform-origin: top center; /* För auto-skalning */
+}
 
 /* ELEMENT */
 .element {
     background: white; border: 1px solid #cbd5e1; display: flex; flex-direction: column; 
     align-items: center; justify-content: center; border-radius: 8px; position: relative;
-    transition: transform 0.1s, opacity 0.3s;
+    transition: transform 0.1s;
 }
 .element:active { transform: scale(0.9); }
 .symbol { font-weight: 900; font-size: 16px; color: #0f172a; }
 .number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; color: #64748b; }
 
-/* QUIZ-LÄGE FIX */
+/* QUIZ-LÄGE */
 body.quiz-mode .symbol { visibility: hidden !important; }
 body.quiz-mode .element { border-style: dashed; background: #f1f5f9 !important; }
 
-/* FÄRGER */
+/* ELEMENT-FÄRGER */
 .ickemetall { background: #4ade80 !important; }
 .adelgas { background: #fde047 !important; }
 .alkalimetall { background: #f87171 !important; }
@@ -54,13 +58,12 @@ body.quiz-mode .element { border-style: dashed; background: #f1f5f9 !important; 
 .lantanid { background: #f472b6 !important; }
 .aktinid { background: #fb7185 !important; }
 
-/* 3D VÄND-KORT (POPUP) */
+/* FLIP CARD DESIGN */
 #info-overlay {
     position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4);
     display: flex; align-items: center; justify-content: center; z-index: 5000;
     backdrop-filter: blur(4px); perspective: 1000px;
 }
-
 .flip-card {
     width: 280px; height: 380px; position: relative;
     transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -69,25 +72,24 @@ body.quiz-mode .element { border-style: dashed; background: #f1f5f9 !important; 
 
 .card-front, .card-back {
     position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
-    background: white; border-radius: 30px; padding: 30px; box-sizing: border-box;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: flex; flex-direction: column;
+    border-radius: 30px; padding: 30px; box-sizing: border-box;
+    display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
 }
+.card-back { transform: rotateY(180deg); }
 
-.card-back { transform: rotateY(180deg); background: #f8fafc; }
+/* Text och Boxar inuti kortet */
+.card-symbol { font-size: 60px; font-weight: 900; text-align: center; margin: 10px 0 0; }
+.card-name { text-align: center; font-size: 20px; font-weight: 700; margin: 0 0 25px; opacity: 0.8; }
+.card-info-box { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); border-radius: 15px; padding: 15px; }
+.info-item { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
 
-.close-btn { position: absolute; top: 15px; right: 15px; border: none; background: #f1f5f9; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; }
+.light-text { color: white !important; }
+.dark-text { color: #1e293b !important; }
 
-.card-symbol { font-size: 60px; font-weight: 900; color: #1e293b; text-align: center; margin: 10px 0 0; }
-.card-name { text-align: center; font-size: 20px; font-weight: 700; color: #64748b; margin: 0 0 25px; }
+.close-btn { position: absolute; top: 15px; right: 15px; border: none; background: rgba(0,0,0,0.05); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; }
+.flip-btn { background: rgba(255,255,255,0.2); border: 1px solid currentColor; color: inherit; padding: 10px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: auto; }
+.primary-btn { width: 100%; background: #1e293b; color: white; border: none; padding: 14px; border-radius: 15px; font-weight: 800; margin-top: 10px; cursor: pointer; }
+#usage-text { font-size: 15px; line-height: 1.5; text-align: center; margin-top: 20px; }
+#back-title { text-align: center; font-weight: 900; }
 
-.card-info-box { background: #f1f5f9; border-radius: 15px; padding: 15px; margin-bottom: 15px; }
-.info-item { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #e2e8f0; }
-.info-item:last-child { border: none; }
-.info-item span { color: #64748b; font-weight: 600; }
-.info-item strong { color: #1e293b; }
-
-.flip-btn { background: transparent; border: 2px solid #3b82f6; color: #3b82f6; padding: 10px; border-radius: 12px; font-weight: 700; font-size: 12px; cursor: pointer; margin-top: auto; }
-.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 14px; border-radius: 15px; font-weight: 800; margin-top: 10px; cursor: pointer; }
-
-#usage-text { font-size: 15px; line-height: 1.5; color: #475569; margin-top: 20px; text-align: center; }
 .hidden { display: none !important; }
