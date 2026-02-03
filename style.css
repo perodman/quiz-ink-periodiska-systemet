@@ -1,91 +1,72 @@
-body {
-    font-family: 'Inter', sans-serif;
-    margin: 0; background: #f8fafc; color: #1e293b;
-    height: 100vh; width: 100vw; display: flex; flex-direction: column;
-    overflow: hidden;
+/* Grundläggande layout */
+html, body { 
+    margin: 0; padding: 0; width: 100%; height: 100%; 
+    overflow: hidden; background: #f8fafc; font-family: 'Inter', sans-serif;
 }
 
-/* 1. RESET-KNAPP SOM FÖLJER MED */
-.fixed-reset-btn {
-    position: fixed; top: 15px; left: 15px; width: 50px; height: 50px;
-    background: #3b82f6; border: none; border-radius: 50%;
-    color: white; z-index: 9999; cursor: pointer;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
+/* 1. UI-LAGER (PUNKT 3 & 4) */
+#ui-layer {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 9999;
 }
-.zoom-icon { font-size: 16px; }
-.reset-arrow { font-size: 14px; margin-left: -4px; margin-top: -8px; font-weight: bold; }
+#ui-layer * { pointer-events: auto; } /* Gör knappar klickbara igen */
 
-#header { padding: 15px 10px; background: white; border-bottom: 1px solid #e2e8f0; text-align: center; z-index: 10; }
-h1 { font-size: 1.2rem; margin: 0 0 10px; font-weight: 900; }
-
-.mode-selector { display: inline-flex; background: #f1f5f9; padding: 4px; border-radius: 12px; }
-.mode-toggle { border: none; padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; background: transparent; }
-.mode-toggle.active { background: white; color: #3b82f6; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-
-/* 2. GRID & SCROLL FIX */
-#grid-wrapper { 
-    flex: 1; overflow: auto; padding: 20px; 
-    display: block; position: relative;
-    -webkit-overflow-scrolling: touch;
+/* Reset-knappen i hörnet */
+.zoom-reset-fab {
+    position: absolute; top: 15px; left: 15px;
+    width: 55px; height: 55px; background: #3b82f6;
+    border: none; border-radius: 15px; color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex;
+    align-items: center; justify-content: center; cursor: pointer;
 }
-#main-container { 
-    display: grid; grid-template-columns: repeat(18, 55px); 
-    grid-template-rows: repeat(10, 55px); gap: 4px; 
-    transform-origin: 0 0;
-}
+.zoom-reset-fab .icon { font-size: 22px; }
+.zoom-reset-fab .arrow { font-size: 14px; position: absolute; bottom: 8px; right: 8px; font-weight: bold; }
 
-.element { background: white; border: 1px solid #cbd5e1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 6px; position: relative; }
-.symbol { font-weight: 900; font-size: 16px; }
-.number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; }
-.num-dark { color: #000; } .num-light { color: #fff; }
-
-/* FÄRGER */
-.ickemetall { background: #4ade80 !important; } .adelgas { background: #fde047 !important; }
-.alkalimetall { background: #f87171 !important; } .alkalisk-jordmetall { background: #fb923c !important; }
-.halvmetall { background: #93c5fd !important; } .halogen { background: #c084fc !important; }
-.overgangsmetall { background: #cbd5e1 !important; } .metall { background: #94a3b8 !important; }
-.lantanid { background: #f472b6 !important; } .aktinid { background: #fb7185 !important; }
-
-/* 3. POPUP-FIX (Ignorerar zoom) */
+/* Popup-rutan (PUNKT 4) */
 #info-overlay {
-    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
-    display: flex; align-items: center; justify-content: center; z-index: 10000;
-    backdrop-filter: blur(5px);
+    position: absolute; inset: 0; background: rgba(15, 23, 42, 0.7);
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(8px);
 }
-.flip-card { width: 300px; height: 420px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; }
+.flip-card { width: 310px; height: 440px; perspective: 1000px; transform-style: preserve-3d; transition: transform 0.6s; }
 .flip-card.is-flipped { transform: rotateY(180deg); }
 
 .card-front, .card-back { 
-    position: absolute; width: 100%; height: 100%; 
-    backface-visibility: hidden; border-radius: 25px; 
-    padding: 25px; box-sizing: border-box; display: flex; flex-direction: column;
+    position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 30px; padding: 30px; display: flex; flex-direction: column; align-items: center;
 }
 .card-back { transform: rotateY(180deg); }
 
-/* Innehåll i kortet */
-.card-content-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; }
-.card-symbol { font-size: 70px; font-weight: 900; margin: 10px 0 0; text-align: center; }
-.card-name { font-size: 24px; font-weight: 700; margin-bottom: 20px; text-align: center; }
+/* Innehåll i popup (PUNKT 5 & 6) */
+.card-info-box { background: rgba(255,255,255,0.2); border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box; margin: 15px 0; }
+.info-item { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.usage-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.usage-wrapper h3 { margin-bottom: 10px; font-weight: 900; }
 
-/* Centrerad infobox */
-.card-info-box { 
-    background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); 
-    border-radius: 15px; padding: 15px; width: 100%; box-sizing: border-box;
+/* 2. SCROLL-VY (PUNKT 2) */
+#scroll-viewport {
+    width: 100vw; height: 100vh; overflow: auto;
+    -webkit-overflow-scrolling: touch;
 }
-.info-item { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.info-item:last-child { border: none; }
+#main-header { padding: 60px 20px 20px; text-align: center; }
+#main-container {
+    display: grid; grid-template-columns: repeat(18, 58px);
+    grid-template-rows: repeat(10, 58px); gap: 4px;
+    padding: 20px; width: fit-content; margin: 0 auto;
+}
+.bottom-spacer { height: 200px; } /* Säkerställer scroll i liggande läge */
 
-/* Baksida layout */
-#back-title { margin: 0 0 15px; font-weight: 900; text-align: center; }
-.usage-container { flex: 1; display: flex; align-items: center; justify-content: center; }
-#usage-text { font-size: 16px; line-height: 1.6; text-align: center; margin: 0; }
+/* Element-styling */
+.element { background: white; border: 1px solid #cbd5e1; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center; }
+.symbol { font-weight: 900; font-size: 18px; }
+.number { position: absolute; top: 4px; left: 6px; font-size: 10px; font-weight: 800; }
+.num-dark { color: #000; } .num-light { color: #fff; }
 
-.flip-btn { background: rgba(0,0,0,0.1); border: 1px solid currentColor; color: inherit; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 15px; width: 100%; }
-.primary-btn { background: #1e293b; color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 10px; }
-.close-btn { position: absolute; top: 15px; right: 15px; border: none; background: rgba(0,0,0,0.1); border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 20px; font-weight: bold; }
+/* Färger (Utdrag) */
+.ickemetall { background: #4ade80 !important; } .adelgas { background: #fde047 !important; }
+.alkalimetall { background: #f87171 !important; } .overgangsmetall { background: #cbd5e1 !important; }
+.lantanid { background: #f472b6 !important; } .aktinid { background: #fb7185 !important; }
 
+.hidden { display: none !important; }
 .light-text { color: white !important; }
 .dark-text { color: #1e293b !important; }
-.hidden { display: none !important; }
