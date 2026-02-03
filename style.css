@@ -49,6 +49,7 @@ body {
     display: flex; align-items: center; justify-content: center;
     z-index: 6000; backdrop-filter: blur(2px);
 }
+
 .info-card {
     width: 80%; max-width: 300px; /* Smalare kort */
     background: white; border-radius: 24px; padding: 25px;
