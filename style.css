@@ -1,56 +1,71 @@
-/* Grundinställningar */
-body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #f8fafc; }
+body, html { 
+    margin: 0; padding: 0; width: 100%; height: 100%; 
+    overflow: hidden; font-family: 'Inter', sans-serif; background: #f8fafc; 
+}
 
-/* STARTSIDA / PORTAL (Gustav Vasa stil) */
-.portal-overlay { position: fixed; inset: 0; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); display: flex; align-items: center; justify-content: center; z-index: 5000; color: white; padding: 20px; }
-.portal-content { max-width: 600px; text-align: center; }
-.portal-badge { background: #3b82f6; display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 20px; letter-spacing: 1px; }
-.portal-content h1 { font-size: 2.5rem; font-weight: 900; margin: 0 0 10px; }
-.portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; }
-.portal-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 30px 20px; border-radius: 24px; cursor: pointer; transition: 0.3s; }
-.portal-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-5px); }
-.card-icon { font-size: 40px; margin-bottom: 15px; }
-.portal-card h3 { margin: 0 0 10px; font-weight: 800; }
-.portal-card p { font-size: 14px; opacity: 0.7; margin: 0; }
+/* PORTAL-DESIGN */
+.portal-overlay { 
+    position: fixed; inset: 0; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
+    display: flex; align-items: center; justify-content: center; z-index: 5000; color: white; padding: 20px; 
+}
+.portal-content { max-width: 500px; text-align: center; }
+.portal-badge { background: #3b82f6; display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-bottom: 15px; }
+.portal-content h1 { font-size: 2.2rem; font-weight: 900; margin: 0 0 10px; }
+.portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; }
+.portal-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 25px 15px; border-radius: 20px; cursor: pointer; transition: 0.2s; }
+.portal-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); }
+.card-icon { font-size: 32px; margin-bottom: 10px; }
+.portal-footer { margin-top: 40px; font-size: 12px; opacity: 0.4; }
 
-/* HEADER & ZOOM (Punkt 1 & 2) */
-#app-header { position: absolute; top: 0; left: 0; right: 0; background: white; padding: 15px; border-bottom: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; z-index: 2000; }
-.header-main { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
-.header-main h2 { margin: 0; font-size: 16px; font-weight: 900; }
-.mode-indicator { background: #f1f5f9; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #3b82f6; text-transform: uppercase; }
-.zoom-toolbar { display: flex; gap: 5px; }
-.zoom-btn { background: #f1f5f9; border: 1px solid #e2e8f0; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; color: #475569; }
-.zoom-btn:active { background: #e2e8f0; }
+/* HEADER & ZOOM */
+#app-header { 
+    position: fixed; top: 0; left: 0; right: 0; background: white; padding: 12px; 
+    border-bottom: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; z-index: 2000; 
+}
+.header-main { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.header-main h2 { margin: 0; font-size: 15px; font-weight: 900; color: #1e293b; }
+.home-btn { border: none; background: #f1f5f9; border-radius: 8px; cursor: pointer; padding: 5px 8px; }
+.mode-indicator { background: #eff6ff; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #3b82f6; text-transform: uppercase; }
+.zoom-toolbar { display: flex; gap: 4px; }
+.zoom-btn { background: #f8fafc; border: 1px solid #e2e8f0; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
 
-/* POPUP-DESIGN (Punkt 3) */
-#overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); z-index: 3000; transition: opacity 0.3s; }
-.card { width: 280px; height: 380px; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); animation: popupIn 0.3s ease-out; }
-@keyframes popupIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-.card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 24px; padding: 25px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-.card-back { transform: rotateY(180deg); }
-.is-flipped { transform: rotateY(180deg); }
-
-.card-info-box { background: rgba(255,255,255,0.15); border-radius: 16px; padding: 12px; width: 100%; margin: 15px 0; }
-.info-item { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.back-content-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-
-/* GRID & VIEWPORT */
+/* PERIODISKA SYSTEMET GRID */
 #viewport { width: 100vw; height: 100vh; overflow: auto; -webkit-overflow-scrolling: touch; }
-#table-container { display: grid; grid-template-columns: repeat(18, 55px); grid-template-rows: repeat(10, 55px); gap: 4px; padding: 120px 40px; transform-origin: 0 0; }
+#table-container { display: grid; grid-template-columns: repeat(18, 54px); grid-template-rows: repeat(10, 54px); gap: 4px; padding: 120px 40px; transform-origin: 0 0; }
 .element { background: white; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; }
 .symbol { font-weight: 900; font-size: 16px; }
 .number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; }
 
-/* FÄRGER & UTILITY */
-.num-dark { color: #000; } .num-light { color: #fff; }
-.hidden { display: none !important; }
-.light-text { color: white !important; }
-.dark-text { color: #1e293b !important; }
-.close-x { position: absolute; top: 15px; right: 15px; border: none; background: rgba(0,0,0,0.1); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; }
-.flip-trigger { margin-top: auto; background: rgba(0,0,0,0.1); border: 1px solid currentColor; padding: 10px; width: 100%; border-radius: 12px; font-weight: 700; cursor: pointer; }
+/* POPUP DESIGN */
+#overlay { 
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); 
+    display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); z-index: 3000; 
+}
+.card { 
+    width: 270px; height: 360px; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    animation: popIn 0.3s ease-out; 
+}
+@keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-/* Kategorifärger */
+.card-face { 
+    position: absolute; inset: 0; backface-visibility: hidden; border-radius: 22px; 
+    padding: 20px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 15px 35px rgba(0,0,0,0.25); 
+}
+.card-back { transform: rotateY(180deg); }
+.is-flipped { transform: rotateY(180deg); }
+
+.content-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+.card-info-box { background: rgba(255,255,255,0.2); border-radius: 14px; padding: 10px; width: 100%; margin: 12px 0; box-sizing: border-box; }
+.info-item { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.back-content-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.back-content-wrapper p { font-size: 14px; line-height: 1.5; margin: 0; }
+
+/* FÄRGER */
 .ickemetall { background: #4ade80 !important; } .adelgas { background: #fde047 !important; }
 .alkalimetall { background: #f87171 !important; } .overgangsmetall { background: #cbd5e1 !important; }
 .lantanid { background: #f472b6 !important; } .aktinid { background: #fb7185 !important; }
+.num-light { color: white; } .num-dark { color: black; }
+.light-text { color: white; } .dark-text { color: #1e293b; }
+.hidden { display: none !important; }
+.close-x { position: absolute; top: 12px; right: 12px; border: none; background: rgba(0,0,0,0.05); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; }
+.flip-trigger { background: rgba(0,0,0,0.1); border: 1px solid currentColor; padding: 10px; width: 100%; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 13px; }
