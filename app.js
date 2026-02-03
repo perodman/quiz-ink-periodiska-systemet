@@ -3,20 +3,50 @@ let currentMode = 'study';
 let targetElement = null;
 let currentItem = null;
 
-// Punkt 2: Specifika beskrivningar för varje grundämne
 const elementFacts = {
-    "H": "Väte är universums bränsle. Det används i bränsleceller för att skapa ren energi och är en viktig del i produktionen av ammoniak.",
-    "He": "Helium är inte bara för ballonger; det är kritiskt för att kyla supraledande magneter i MR-skannrar på sjukhus.",
-    "Li": "Litium är hjärtat i den gröna omställningen, som den huvudsakliga komponenten i batterier för elbilar och telefoner.",
-    "Be": "Beryllium är lättare än aluminium men starkare än stål. Det används i rymdteleskop som James Webb.",
-    "B": "Bor används för att göra glas tåligt mot värme (Pyrex) och är en viktig ingrediens i tvättmedel.",
-    "C": "Kol är grunden för allt liv. I industrin används det som allt från stålförstärkning till aktiva filter.",
-    "N": "Kväve används för att kyla mat under transport och är den viktigaste komponenten i konstgödsel.",
-    "O": "Syre används inom sjukvård för andningshjälp och inom stålindustrin för att bränna bort föroreningar.",
-    "F": "Fluor är mest känt för att skydda våra tänder, men används också i tillverkningen av teflonpannor.",
-    "Ne": "Neon används främst i belysning och som kylmedel i högspänningsutrustning.",
-    "Si": "Kisel är ryggraden i hela datorindustrin. Utan kisel, inga mikrochip eller processorer.",
-    "Fe": "Järn är vår absolut vanligaste konstruktionsmetall. Det bygger allt från bilar till skyskrapor."
+    "H": "Väte är universums vanligaste ämne. Det används som bränsle i rymdraketer och är avgörande för produktion av ammoniak till konstgödsel.",
+    "He": "Helium är inte bara för ballonger; dess extremt låga kokpunkt gör det oumbärligt för att kyla supraledande magneter i MR-kameror.",
+    "Li": "Litium är ryggraden i modern bärbar teknik och elbilar tack vare dess förmåga att lagra stora mängder energi i lätta batterier.",
+    "Be": "Beryllium är lättare än aluminium men mycket styvare. Det används i rymdteleskop, som James Webb, och i delar till stridsflygplan.",
+    "B": "Bor är en viktig ingrediens i värmetåligt borosilikatglas (Pyrex) och används som neutronabsorbent i kärnreaktorer.",
+    "C": "Kol är livets byggsten. Det bildar allt från mjuka grafitstift i pennor till världens hårdaste naturliga material: diamanten.",
+    "N": "Kväve utgör 78% av luften vi andas. I flytande form används det för att frysa mat snabbt och för att bevara biologiska prover.",
+    "O": "Syre krävs för förbränning och för nästan allt liv. Inom industrin används det för att tillverka stål och plast.",
+    "F": "Fluor är det mest reaktiva grundämnet. Det skyddar våra tänder i form av fluorid och används i non-stick beläggningar som Teflon.",
+    "Ne": "Neon ger ett karaktäristiskt röd-orange ljus i urladdningsrör. Det används främst i reklamskyltar och högspänningsindikatorer.",
+    "Na": "Natrium är en mjuk metall som reagerar våldsamt med vatten. Det är en av de två komponenterna i vanligt bordssalt.",
+    "Mg": "Magnesium brinner med ett extremt starkt vitt ljus. Det används i lättviktslegeringar för bilar och flygplan.",
+    "Al": "Aluminium är känt för sin låga vikt och korrosionsbeständighet. Det används i allt från läskburkar till flygplansskrov.",
+    "Si": "Kisel är fundamentet för modern elektronik. Halvledare gjorda av kisel utgör hjärtat i varje smartphone och dator.",
+    "P": "Fosfor är nödvändigt för DNA och benvävnad. Industriellt används det främst i gödningsmedel och i tändsticksplån.",
+    "S": "Svavel används för att vulkanisera gummi (göra det hårt) och för att tillverka svavelsyra, världens mest använda industrikemikalie.",
+    "Cl": "Klor är ett effektivt desinfektionsmedel för dricksvatten och simbassänger, och är en viktig del i PVC-plast.",
+    "Ar": "Argon är en ädelgas som används som skyddsgas vid svetsning för att förhindra att den heta metallen reagerar med luft.",
+    "K": "Kalium är livsviktigt för nervsystemet. Det används i stora mängder som gödsel för att hjälpa växter att växa.",
+    "Ca": "Kalcium bygger upp våra tänder och skelett. Det används också som ett legeringsämne för att ta bort föroreningar från metaller.",
+    "Ti": "Titan är lika starkt som stål men 45% lättare. Det är extremt korrosionsbeständigt och används ofta i medicinska implantat.",
+    "Cr": "Krom ger rostfritt stål dess glans och motståndskraft mot rost. Det används också för att ge bilar en skinande yta.",
+    "Mn": "Mangan är avgörande för stålproduktion eftersom det tar bort svavel och syre, vilket gör stålet hårdare och mer hållbart.",
+    "Fe": "Järn är vår viktigaste metall. Genom att blanda det med kol skapas stål, som bygger upp hela vår infrastruktur.",
+    "Co": "Kobolt används i slitstarka legeringar och är en nyckelkomponent i batterier för elbilar och jetmotorer.",
+    "Ni": "Nickel används främst i rostfritt stål och i uppladdningsbara batterier. Det ger också mynt en silverliknande yta.",
+    "Cu": "Koppar leder elektricitet fantastiskt bra. Det är den viktigaste metallen för elledningar, generatorer och datorer.",
+    "Zn": "Zink används främst för att 'galvanisera' stål, vilket innebär att man lägger på ett skyddande lager som förhindrar rost.",
+    "Ga": "Gallium smälter i din hand. Det används främst i halvledare för LED-lampor och mikrovågor.",
+    "Ge": "Germanium var den första metallen som användes i transistorer. Idag används det främst i fiberoptik och nattkikare.",
+    "As": "Arsenik är känt som ett gift, men i små mängder används det inom elektronik för att förändra ledningsförmågan hos halvledare.",
+    "Se": "Selen är ljuskänsligt och används i fotoceller och solceller. Det är också ett viktigt spårämne för hälsan.",
+    "Br": "Brom används i flamskyddsmedel för att göra plaster mindre brandfarliga och i vissa läkemedel.",
+    "Kr": "Krypton används i energieffektiva fönster (isolerglas) och i högpresterande glödlampor och lasrar.",
+    "Ag": "Silver leder elektricitet bäst av alla grundämnen. Det används i högkvalitativa kontakter och i solpaneler.",
+    "Sn": "Tenn används för att belägga andra metaller för att förhindra korrosion, och är en huvudkomponent i lödtenn.",
+    "I": "Jod är nödvändigt för sköldkörteln. Inom medicin används det som ett effektivt antiseptiskt medel för sår.",
+    "Xe": "Xenon ger ett intensivt vitt ljus och används i bilstrålkastare, biografer och i jonmotorer för rymdfarkoster.",
+    "W": "Volfram (Tungsten) har den högsta smältpunkten av alla metaller. Det används i glödtrådar och i borrverktyg.",
+    "Au": "Guld oxiderar aldrig och leder ström bra, vilket gör det oumbärligt för tillförlitliga kontakter i datorer och mobiler.",
+    "Hg": "Kvicksilver är den enda metallen som är flytande vid rumstemperatur. Det används i vissa vetenskapliga instrument.",
+    "Pb": "Bly är mycket tätt och mjukt. Det används som skydd mot röntgenstrålning och i traditionella bilbatterier.",
+    "U": "Uran är det tyngsta naturliga grundämnet. Det används som bränsle i kärnkraftverk för att producera el."
 };
 
 function startApp(mode) {
@@ -48,7 +78,7 @@ function renderTable() {
         container.innerHTML = '';
         data.subjects[0].items.forEach(item => {
             const div = document.createElement('div');
-            const cat = item.category.toLowerCase().replace(" ", "-");
+            const cat = item.category.toLowerCase().replace(/\s/g, "-");
             div.className = `element ${cat}`;
             div.id = `el-${item.symbol}`;
             div.style.gridRow = item.pos[0];
@@ -73,9 +103,12 @@ function handleElementClick(item) {
     if(currentMode === 'quiz-symbol') {
         if(item.symbol === targetElement.symbol) {
             document.getElementById(`el-${item.symbol}`).classList.add('correct');
-            setTimeout(pickNewTarget, 1000);
+            setTimeout(pickNewTarget, 800);
         } else {
             document.getElementById(`el-${item.symbol}`).classList.add('wrong');
+            setTimeout(() => {
+                document.getElementById(`el-${item.symbol}`).classList.remove('wrong');
+            }, 500);
         }
     } else {
         showInfo(item);
@@ -96,8 +129,8 @@ function showInfo(item) {
         flipBtn.innerText = "Mer information ➔";
     }
 
-    const cat = item.category.toLowerCase().replace(" ", "-");
-    const colors = { ickemetall: "#4ade80", adelgas: "#fde047", alkalimetall: "#f87171", overgangsmetall: "#cbd5e1", halvmetall: "#7dd3fc" };
+    const cat = item.category.toLowerCase().replace(/\s/g, "-");
+    const colors = { ickemetall: "#4ade80", adelgas: "#fde047", alkalimetall: "#f87171", overgangsmetall: "#cbd5e1", halvmetall: "#7dd3fc", lantanid: "#f472b6", aktinid: "#fb7185" };
     const bgColor = colors[cat] || "#ffffff";
 
     document.getElementById('card-f').style.backgroundColor = bgColor;
@@ -109,8 +142,8 @@ function showInfo(item) {
     `;
 
     document.getElementById('usage-text').innerHTML = `
-        <strong>${item.name} (${item.symbol})</strong><br><br>
-        ${elementFacts[item.symbol] || "Används flitigt inom svensk industri och teknisk utveckling."}
+        <div style="font-weight:900; font-size:18px; margin-bottom:10px;">${item.name} (${item.symbol})</div>
+        ${elementFacts[item.symbol] || "Detta grundämne används flitigt inom specialiserad industri och avancerad forskning världen över."}
     `;
     
     overlay.classList.remove('hidden');
@@ -126,7 +159,9 @@ function checkGuess() {
         document.getElementById('overlay').classList.add('hidden');
         document.getElementById('guest-input').value = "";
     } else {
-        alert("Fel svar, försök igen!");
+        const input = document.getElementById('guest-input');
+        input.style.borderColor = "red";
+        setTimeout(() => { input.style.borderColor = "#ccc"; }, 1000);
     }
 }
 
@@ -136,7 +171,7 @@ function updateZoom() {
 }
 
 document.getElementById('zoom-in').onclick = () => { currentZoom += 0.1; updateZoom(); };
-document.getElementById('zoom-out').onclick = () => { if(currentZoom > 0.5) currentZoom -= 0.1; updateZoom(); };
+document.getElementById('zoom-out').onclick = () => { if(currentZoom > 0.4) currentZoom -= 0.1; updateZoom(); };
 document.getElementById('reset-btn').onclick = () => { currentZoom = 1.0; updateZoom(); };
 document.querySelectorAll('.close-x').forEach(btn => btn.onclick = () => document.getElementById('overlay').classList.add('hidden'));
 document.querySelectorAll('.flip-trigger').forEach(btn => btn.onclick = () => document.getElementById('card-inner').classList.toggle('is-flipped'));
