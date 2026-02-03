@@ -31,13 +31,10 @@ function startApp(mode) {
     currentMode = mode;
     document.getElementById('start-page').classList.add('hidden');
     document.getElementById('fixed-ui').classList.remove('hidden');
-    
-    // Punkt 2: Aktivera dimning om det är quiz
-    const container = document.getElementById('table-container');
-    if(mode.startsWith('quiz')) container.classList.add('quiz-mode-active');
-    else container.classList.remove('quiz-mode-active');
-
     document.getElementById('viewport').classList.remove('hidden');
+    
+    // Punkt 1: Återställ layout (ingen utgråning)
+    document.getElementById('table-container').classList.remove('quiz-mode-active');
     document.getElementById('current-mode').innerText = mode === 'study' ? "Studera" : "Quiz";
     
     if(mode === 'quiz-symbol') {
@@ -45,25 +42,12 @@ function startApp(mode) {
         pickNewTarget();
     } else if(mode === 'quiz-multi') {
         document.getElementById('quiz-bar').classList.add('hidden');
-        renderTable();
+        renderTable(); 
         setTimeout(startMultiQuiz, 300);
     } else {
         document.getElementById('quiz-bar').classList.add('hidden');
     }
     renderTable();
-}
-
-function startMultiQuiz() {
-    const randomItem = allElements[Math.floor(Math.random() * allElements.length)];
-    showInfo(randomItem);
-}
-
-function pickNewTarget() {
-    fetch('data.json').then(r => r.json()).then(data => {
-        const items = data.subjects[0].items;
-        targetElement = items[Math.floor(Math.random() * items.length)];
-        document.getElementById('quiz-question').innerText = `Klicka på: ${targetElement.name} (${targetElement.symbol})`;
-    });
 }
 
 function renderTable() {
@@ -80,6 +64,7 @@ function renderTable() {
             div.style.gridColumn = item.pos[1];
             
             let content = `<span class="number">${item.number}</span>`;
+            // I Namnge Ämnet döljer vi symbolen, annars visas den (Hitta Symbolen)
             content += `<span class="symbol">${currentMode === 'quiz-name' ? '?' : item.symbol}</span>`;
             
             div.innerHTML = content;
@@ -90,15 +75,16 @@ function renderTable() {
     });
 }
 
+function pickNewTarget() {
+    targetElement = allElements[Math.floor(Math.random() * allElements.length)];
+    document.getElementById('quiz-question').innerText = `Hitta: ${targetElement.name} (${targetElement.symbol})`;
+}
+
 function handleElementClick(item) {
     if(currentMode === 'quiz-symbol') {
         if(item.symbol === targetElement.symbol) {
             document.getElementById(`el-${item.symbol}`).classList.add('completed');
             pickNewTarget();
-        } else {
-            const el = document.getElementById(`el-${item.symbol}`);
-            el.style.animation = "shake 0.3s";
-            setTimeout(() => el.style.animation = "", 300);
         }
     } else {
         showInfo(item);
@@ -111,12 +97,10 @@ function showInfo(item) {
     const inputArea = document.getElementById('quiz-input-area');
     const multiArea = document.getElementById('multi-choice-area');
     const flipBtn = document.getElementById('flip-btn-text');
-    const feedback = document.getElementById('success-feedback');
     
-    feedback.classList.add('hidden');
+    document.getElementById('success-overlay').classList.add('hidden');
     document.getElementById('guest-input').value = "";
     
-    // Punkt 3: Hantera flervals-quiz
     if(currentMode === 'quiz-multi') {
         inputArea.classList.add('hidden');
         multiArea.classList.remove('hidden');
@@ -141,25 +125,27 @@ function showInfo(item) {
     document.getElementById('card-b').style.backgroundColor = bgColor;
     document.getElementById('card-inner').className = `card ${isDark ? "light-text" : "dark-text"}`;
 
+    // Punkt 4: Symmetrisk centrerad framsida
     document.getElementById('front-content').innerHTML = `
-        <p style="font-size:13px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
-        <p style="font-size:55px; font-weight:900; margin:2px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
-        <p style="font-size:20px; font-weight:700; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
+        <div class="content-center">
+            <p style="font-size:14px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
+            <p style="font-size:65px; font-weight:900; margin:10px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
+            <p style="font-size:22px; font-weight:800; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
+        </div>
     `;
 
     document.getElementById('usage-text').innerHTML = `
-        <div style="font-weight:900; font-size:17px; margin-bottom:8px;">${item.name}</div>
-        ${elementFacts[item.symbol] || "Används inom industri och forskning."}
+        <div style="font-weight:900; font-size:18px; margin-bottom:10px;">${item.name}</div>
+        ${elementFacts[item.symbol] || "Används inom modern industri och forskning."}
     `;
     
-    overlay.classList.remove('hidden');
+    overlay.classList.add('active'); // Punkt 6: Mjuk animation in
     document.getElementById('card-inner').classList.remove('is-flipped');
 }
 
 function generateChoices(correctItem) {
     const area = document.getElementById('multi-choice-area');
     area.innerHTML = '';
-    
     let choices = [correctItem.name];
     while(choices.length < 4) {
         let rand = allElements[Math.floor(Math.random() * allElements.length)].name;
@@ -173,14 +159,12 @@ function generateChoices(correctItem) {
         btn.innerText = name;
         btn.onclick = () => {
             if(name === correctItem.name) {
-                document.getElementById('success-feedback').classList.remove('hidden');
+                btn.classList.add('correct-choice'); // Punkt 5: Grön vid rätt
+                document.getElementById('success-overlay').classList.remove('hidden');
                 document.getElementById(`el-${correctItem.symbol}`).classList.add('completed');
-                setTimeout(() => { 
-                    overlay.classList.add('hidden');
-                    startMultiQuiz();
-                }, 1000);
+                setTimeout(() => { closePopup(); startMultiQuiz(); }, 1200);
             } else {
-                btn.style.backgroundColor = "#ffcccc";
+                btn.classList.add('wrong-choice'); // Punkt 5: Röd vid fel
             }
         };
         area.appendChild(btn);
@@ -191,17 +175,29 @@ function checkGuess() {
     const val = document.getElementById('guest-input').value.trim().toLowerCase();
     const el = document.getElementById(`el-${currentItem.symbol}`);
     if(val === currentItem.name.toLowerCase()) {
-        document.getElementById('success-feedback').classList.remove('hidden');
+        document.getElementById('success-overlay').classList.remove('hidden');
         el.classList.add('completed');
         if(currentMode === 'quiz-name') el.querySelector('.symbol').innerText = currentItem.symbol;
-        setTimeout(() => document.getElementById('overlay').classList.add('hidden'), 1000);
+        setTimeout(closePopup, 1200);
     } else {
-        document.getElementById('guest-input').style.borderColor = "red";
+        document.getElementById('guest-input').style.borderColor = "#ef4444";
+        setTimeout(() => document.getElementById('guest-input').style.borderColor = "rgba(0,0,0,0.1)", 1000);
     }
 }
 
-function closePopup() { document.getElementById('overlay').classList.add('hidden'); }
-function updateZoom() { document.getElementById('table-container').style.transform = `scale(${currentZoom})`; }
+function startMultiQuiz() {
+    const randomItem = allElements[Math.floor(Math.random() * allElements.length)];
+    showInfo(randomItem);
+}
+
+function closePopup() {
+    const overlay = document.getElementById('overlay');
+    overlay.classList.remove('active'); // Punkt 6: Mjuk animation ut
+}
+
+function updateZoom() {
+    document.getElementById('table-container').style.transform = `scale(${currentZoom})`;
+}
 
 document.getElementById('zoom-in').onclick = () => { currentZoom += 0.1; updateZoom(); };
 document.getElementById('zoom-out').onclick = () => { if(currentZoom > 0.3) currentZoom -= 0.1; updateZoom(); };
