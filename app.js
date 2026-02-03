@@ -25,21 +25,21 @@ const elementFacts = {
     "Ar": "Argon är en ädelgas som skyddar glödtråden i gamla lampor och används vid svetsning.",
     "K": "Kalium behövs för att kroppens nerver och muskler ska fungera. Det finns naturligt i bananer.",
     "Ca": "Kalcium bygger upp våra ben och tänder. Det är också en viktig ingrediens i cement och betong.",
-    "Ti": "Titan är lika starkt som stål men mycket lättare. Det används ofta i medicinska implantat.",
+    "Ti": "Titan är starkt som stål men lättare. Det används ofta i medicinska implantat.",
     "Fe": "Järn är vår viktigaste industrimetall. Genom att tillsätta kol skapar vi stål.",
     "Ni": "Nickel används främst i rostfritt stål och i laddningsbara batterier.",
-    "Cu": "Koppar leder ström fantastiskt bra. Det är den viktigaste metallen i världens elledningar.",
+    "Cu": "Koppar leder ström fantastiskt bra. Det är metallen i världens elledningar.",
     "Zn": "Zink används för att galvanisera stål och är en viktig ingrediens i solkrämer.",
     "Ag": "Silver leder ström bäst av alla metaller. Det används i elektronik och smycken.",
-    "Sn": "Tenn används för att löda komponenter och som skyddande lager i konservburkar.",
+    "Sn": "Tenn används för att löda komponenter och i konservburkar.",
     "I": "Jod är livsviktigt för sköldkörteln. Det tillsätts ofta i bordssalt.",
-    "W": "Volfram har den högsta smältpunkten av alla metaller och används i borrverktyg.",
-    "Pt": "Platina är extremt sällsynt och används i katalysatorer för att rena bilavgaser.",
-    "Au": "Guld korroderar aldrig. Det används som värdebevarare och i känslig elektronik.",
-    "Hg": "Kvicksilver är flytande vid rumstemperatur. Det är mycket giftigt för miljön.",
+    "W": "Volfram har högsta smältpunkten och används i borrverktyg.",
+    "Pt": "Platina är extremt sällsynt och används i katalysatorer.",
+    "Au": "Guld korroderar aldrig. Det används som värdebevarare och i elektronik.",
+    "Hg": "Kvicksilver är flytande vid rumstemperatur. Det är mycket giftigt.",
     "Pb": "Bly är extremt tungt. Det används som skydd mot röntgenstrålning.",
     "U": "Uran är bränslet i våra kärnkraftverk och innehåller enorma mängder energi.",
-    "Pu": "Plutonium är ett konstgjort ämne som används som bränsle i rymdsonder."
+    "Pu": "Plutonium används som bränsle i rymdsonder."
 };
 
 function startApp(mode) {
@@ -49,11 +49,13 @@ function startApp(mode) {
     document.getElementById('viewport').classList.remove('hidden');
     
     const container = document.getElementById('table-container');
-    container.classList.remove('quiz-mode-active');
+    container.className = ""; // Rensa tidigare klasser
     
-    // AKTIVERA UTGRÅNING FÖR QUIZ
-    if(mode.includes('quiz')) {
-        container.classList.add('quiz-mode-active');
+    // LOGIK FÖR DIMNING (Återställd enligt önskemål)
+    if(mode === 'quiz-name' || mode === 'quiz-multi') {
+        container.classList.add('dimmed', 'allow-clicks');
+    } else if (mode === 'quiz-symbol') {
+        container.classList.add('dimmed'); // Endast rätt element går att klicka
     }
 
     document.getElementById('current-mode').innerText = 
@@ -61,8 +63,7 @@ function startApp(mode) {
         mode === 'quiz-symbol' ? "Hitta Symbol" : 
         mode === 'quiz-name' ? "Namnge" : "Snabb-Quiz";
     
-    if(mode === 'quiz-symbol') document.getElementById('quiz-bar').classList.remove('hidden');
-    else document.getElementById('quiz-bar').classList.add('hidden');
+    document.getElementById('quiz-bar').classList.toggle('hidden', mode !== 'quiz-symbol');
 
     renderTable();
 }
@@ -81,14 +82,19 @@ function renderTable() {
             div.style.gridRow = item.pos[0];
             div.style.gridColumn = item.pos[1];
             
-            let displaySymbol = (currentMode === 'quiz-name') ? '?' : item.symbol;
+            let symbolText = (currentMode === 'quiz-name') ? '?' : item.symbol;
+            div.innerHTML = `<span class="number">${item.number}</span><span class="symbol">${symbolText}</span>`;
             
-            div.innerHTML = `<span class="number">${item.number}</span><span class="symbol">${displaySymbol}</span>`;
-            div.onclick = () => handleElementClick(item);
+            // Fix: Explicit klickhanterare som alltid körs
+            div.onclick = (e) => {
+                e.stopPropagation();
+                handleElementClick(item);
+            };
             container.appendChild(div);
         });
 
         if(currentMode === 'quiz-symbol') pickNewTarget();
+        if(currentMode === 'quiz-multi') startMultiQuiz();
         updateZoom();
     });
 }
@@ -107,29 +113,23 @@ function handleElementClick(item) {
 function showInfo(item) {
     currentItem = item;
     const overlay = document.getElementById('overlay');
+    overlay.classList.add('active'); // GÖR POPUP SYNLIG
+    
+    document.getElementById('success-overlay').classList.add('hidden');
+    document.getElementById('card-inner').classList.remove('is-flipped');
+    
     const inputArea = document.getElementById('quiz-input-area');
     const multiArea = document.getElementById('multi-choice-area');
     const flipBtn = document.getElementById('flip-btn-text');
     
-    overlay.classList.add('active'); // AKTIVERAR POPUP
-    document.getElementById('success-overlay').classList.add('hidden');
-    document.getElementById('card-inner').classList.remove('is-flipped');
-    
-    if(currentMode === 'quiz-multi') {
-        inputArea.classList.add('hidden');
-        multiArea.classList.remove('hidden');
-        flipBtn.classList.add('hidden');
-        generateChoices(item);
-    } else if(currentMode === 'quiz-name') {
-        inputArea.classList.remove('hidden');
-        multiArea.classList.add('hidden');
-        flipBtn.classList.remove('hidden');
-    } else {
-        inputArea.classList.add('hidden');
-        multiArea.classList.add('hidden');
-        flipBtn.classList.remove('hidden');
-    }
+    // Hantera visning baserat på läge
+    inputArea.classList.toggle('hidden', currentMode !== 'quiz-name');
+    multiArea.classList.toggle('hidden', currentMode !== 'quiz-multi');
+    flipBtn.classList.toggle('hidden', currentMode === 'quiz-multi');
 
+    if(currentMode === 'quiz-multi') generateChoices(item);
+
+    // Färgsättning
     const cat = item.category.toLowerCase().replace(/\s/g, "-");
     const isDark = ["alkalimetall", "aktinid", "overgangsmetall", "lantanid", "ickemetall"].includes(cat);
     document.getElementById('card-inner').className = `card ${isDark ? "light-text" : "dark-text"}`;
@@ -139,14 +139,12 @@ function showInfo(item) {
     document.getElementById('card-b').style.backgroundColor = colors[cat] || "#fff";
 
     document.getElementById('front-content').innerHTML = `
-        <div class="content-center">
-            <p style="font-size:14px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
-            <p style="font-size:60px; font-weight:900; margin:10px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
-            <p style="font-size:22px; font-weight:800; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
-        </div>
+        <p style="font-size:14px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
+        <p style="font-size:60px; font-weight:900; margin:10px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
+        <p style="font-size:22px; font-weight:800; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
     `;
 
-    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Viktigt grundämne i det periodiska systemet.";
+    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Information om användning kommer snart.";
 }
 
 function checkGuess() {
@@ -155,6 +153,7 @@ function checkGuess() {
         document.getElementById('success-overlay').classList.remove('hidden');
         document.getElementById(`el-${currentItem.symbol}`).classList.add('completed');
         setTimeout(closePopup, 1200);
+        document.getElementById('guest-input').value = "";
     }
 }
 
@@ -173,11 +172,11 @@ function generateChoices(correctItem) {
         btn.innerText = name;
         btn.onclick = () => {
             if(name === correctItem.name) {
-                btn.classList.add('correct-choice');
+                btn.classList.add('correct');
                 document.getElementById('success-overlay').classList.remove('hidden');
                 document.getElementById(`el-${correctItem.symbol}`).classList.add('completed');
-                setTimeout(() => { closePopup(); if(currentMode === 'quiz-multi') startMultiQuiz(); }, 1200);
-            } else btn.classList.add('wrong-choice');
+                setTimeout(() => { closePopup(); startMultiQuiz(); }, 1200);
+            } else btn.classList.add('wrong');
         };
         area.appendChild(btn);
     });
