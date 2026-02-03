@@ -4,28 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kemi Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="fixed-ui">
-        <div class="header-minimal">
-            <button id="zoom-out" class="zoom-ctrl">−</button>
-            <button id="reset-btn" class="zoom-ctrl">Återställ</button>
-            <button id="zoom-in" class="zoom-ctrl">+</button>
+    <div id="start-page" class="portal-overlay">
+        <div class="portal-content">
+            <div class="portal-badge">KEMI</div>
+            <h1>Periodiska Systemet</h1>
+            <p class="subtitle">Utforska materiens byggstenar genom interaktiva studier och quiz.</p>
+            
+            <div class="portal-grid">
+                <div class="portal-card" onclick="startApp('study')">
+                    <div class="card-icon">📖</div>
+                    <h3>Studieläge</h3>
+                    <p>Lär dig allt om grundämnenas egenskaper och användning.</p>
+                </div>
+                <div class="portal-card" onclick="startApp('quiz')">
+                    <div class="card-icon">🏆</div>
+                    <h3>Quizläge</h3>
+                    <p>Utmana dig själv och se hur många ämnen du kan identifiera.</p>
+                </div>
+            </div>
+            <div class="portal-footer">Version 2.0 • Skapad för lärande</div>
         </div>
+    </div>
+
+    <div id="fixed-ui" class="hidden">
+        <header id="app-header">
+            <div class="header-main">
+                <button class="home-btn" onclick="location.reload()">🏠</button>
+                <h2>Periodiska Systemet</h2>
+                <div class="mode-indicator" id="current-mode">Studera</div>
+            </div>
+            <div class="zoom-toolbar">
+                <button id="zoom-out" class="zoom-btn">−</button>
+                <button id="reset-btn" class="zoom-btn">Återställ</button>
+                <button id="zoom-in" class="zoom-btn">+</button>
+            </div>
+        </header>
 
         <div id="overlay" class="hidden">
             <div class="card" id="card-inner">
                 <div class="card-face card-front" id="card-f">
                     <button class="close-x">&times;</button>
                     <div id="front-content"></div>
-                    <button class="flip-trigger">Användning ➔</button>
+                    <button class="flip-trigger">Mer information ➔</button>
                 </div>
-                <div class="card-back card-face" id="card-b">
+                <div class="card-face card-back" id="card-b">
                     <button class="close-x">&times;</button>
-                    <div class="back-content">
+                    <div class="back-content-wrapper">
                         <h3>Användning</h3>
                         <p id="usage-text"></p>
                     </div>
@@ -35,10 +64,9 @@
         </div>
     </div>
 
-    <div id="viewport">
-        <div id="table-container">
-            </div>
-        <div class="spacer"></div>
+    <div id="viewport" class="hidden">
+        <div id="table-container"></div>
+        <div class="bottom-spacer"></div>
     </div>
 
     <script src="app.js"></script>
