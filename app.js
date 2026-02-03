@@ -48,6 +48,14 @@ function startApp(mode) {
     document.getElementById('fixed-ui').classList.remove('hidden');
     document.getElementById('viewport').classList.remove('hidden');
     
+    const container = document.getElementById('table-container');
+    container.classList.remove('quiz-mode-active');
+    
+    // AKTIVERA UTGRÅNING FÖR QUIZ
+    if(mode.includes('quiz')) {
+        container.classList.add('quiz-mode-active');
+    }
+
     document.getElementById('current-mode').innerText = 
         mode === 'study' ? "Studera" : 
         mode === 'quiz-symbol' ? "Hitta Symbol" : 
@@ -72,7 +80,10 @@ function renderTable() {
             div.id = `el-${item.symbol}`;
             div.style.gridRow = item.pos[0];
             div.style.gridColumn = item.pos[1];
-            div.innerHTML = `<span class="number">${item.number}</span><span class="symbol">${currentMode === 'quiz-name' ? '?' : item.symbol}</span>`;
+            
+            let displaySymbol = (currentMode === 'quiz-name') ? '?' : item.symbol;
+            
+            div.innerHTML = `<span class="number">${item.number}</span><span class="symbol">${displaySymbol}</span>`;
             div.onclick = () => handleElementClick(item);
             container.appendChild(div);
         });
@@ -82,18 +93,15 @@ function renderTable() {
     });
 }
 
-function pickNewTarget() {
-    targetElement = allElements[Math.floor(Math.random() * allElements.length)];
-    document.getElementById('quiz-question').innerText = `Hitta: ${targetElement.name} (${targetElement.symbol})`;
-}
-
 function handleElementClick(item) {
     if(currentMode === 'quiz-symbol') {
         if(item.symbol === targetElement.symbol) {
             document.getElementById(`el-${item.symbol}`).classList.add('completed');
             pickNewTarget();
         }
-    } else showInfo(item);
+    } else {
+        showInfo(item);
+    }
 }
 
 function showInfo(item) {
@@ -103,8 +111,9 @@ function showInfo(item) {
     const multiArea = document.getElementById('multi-choice-area');
     const flipBtn = document.getElementById('flip-btn-text');
     
+    overlay.classList.add('active'); // AKTIVERAR POPUP
     document.getElementById('success-overlay').classList.add('hidden');
-    document.getElementById('guest-input').value = "";
+    document.getElementById('card-inner').classList.remove('is-flipped');
     
     if(currentMode === 'quiz-multi') {
         inputArea.classList.add('hidden');
@@ -122,29 +131,31 @@ function showInfo(item) {
     }
 
     const cat = item.category.toLowerCase().replace(/\s/g, "-");
-    const colors = { ickemetall: "#4ade80", adelgas: "#fde047", alkalimetall: "#f87171", overgangsmetall: "#cbd5e1", halvmetall: "#7dd3fc", lantanid: "#f472b6", aktinid: "#fb7185" };
-    const bgColor = colors[cat] || "#ffffff";
     const isDark = ["alkalimetall", "aktinid", "overgangsmetall", "lantanid", "ickemetall"].includes(cat);
-    
-    document.getElementById('card-f').style.backgroundColor = bgColor;
-    document.getElementById('card-b').style.backgroundColor = bgColor;
     document.getElementById('card-inner').className = `card ${isDark ? "light-text" : "dark-text"}`;
+    
+    const colors = { ickemetall: "#4ade80", adelgas: "#fde047", alkalimetall: "#f87171", overgangsmetall: "#cbd5e1", halvmetall: "#7dd3fc", lantanid: "#f472b6", aktinid: "#fb7185" };
+    document.getElementById('card-f').style.backgroundColor = colors[cat] || "#fff";
+    document.getElementById('card-b').style.backgroundColor = colors[cat] || "#fff";
 
     document.getElementById('front-content').innerHTML = `
         <div class="content-center">
-            <p style="font-size:16px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
-            <p style="font-size:75px; font-weight:900; margin:15px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
-            <p style="font-size:26px; font-weight:800; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
+            <p style="font-size:14px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
+            <p style="font-size:60px; font-weight:900; margin:10px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
+            <p style="font-size:22px; font-weight:800; margin:0;">${(currentMode === 'quiz-name' || currentMode === 'quiz-multi') ? '???' : item.name}</p>
         </div>
     `;
 
-    document.getElementById('usage-text').innerHTML = `
-        <div style="font-weight:900; font-size:18px; margin-bottom:10px;">${item.name}</div>
-        ${elementFacts[item.symbol] || "Detta grundämne är en viktig del av det periodiska systemet."}
-    `;
-    
-    overlay.classList.add('active');
-    document.getElementById('card-inner').classList.remove('is-flipped');
+    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Viktigt grundämne i det periodiska systemet.";
+}
+
+function checkGuess() {
+    const val = document.getElementById('guest-input').value.trim().toLowerCase();
+    if(val === currentItem.name.toLowerCase()) {
+        document.getElementById('success-overlay').classList.remove('hidden');
+        document.getElementById(`el-${currentItem.symbol}`).classList.add('completed');
+        setTimeout(closePopup, 1200);
+    }
 }
 
 function generateChoices(correctItem) {
@@ -156,7 +167,6 @@ function generateChoices(correctItem) {
         if(!choices.includes(rand)) choices.push(rand);
     }
     choices.sort(() => Math.random() - 0.5);
-
     choices.forEach(name => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
@@ -166,7 +176,7 @@ function generateChoices(correctItem) {
                 btn.classList.add('correct-choice');
                 document.getElementById('success-overlay').classList.remove('hidden');
                 document.getElementById(`el-${correctItem.symbol}`).classList.add('completed');
-                setTimeout(() => { closePopup(); if(currentMode === 'quiz-multi') setTimeout(startMultiQuiz, 300); }, 1200);
+                setTimeout(() => { closePopup(); if(currentMode === 'quiz-multi') startMultiQuiz(); }, 1200);
             } else btn.classList.add('wrong-choice');
         };
         area.appendChild(btn);
@@ -178,15 +188,9 @@ function startMultiQuiz() {
     showInfo(randomItem);
 }
 
-function checkGuess() {
-    const val = document.getElementById('guest-input').value.trim().toLowerCase();
-    if(val === currentItem.name.toLowerCase()) {
-        document.getElementById('success-overlay').classList.remove('hidden');
-        document.getElementById(`el-${currentItem.symbol}`).classList.add('completed');
-        setTimeout(closePopup, 1200);
-    } else {
-        document.getElementById('guest-input').style.borderColor = "#ef4444";
-    }
+function pickNewTarget() {
+    targetElement = allElements[Math.floor(Math.random() * allElements.length)];
+    document.getElementById('quiz-question').innerText = `Hitta: ${targetElement.name} (${targetElement.symbol})`;
 }
 
 function closePopup() { document.getElementById('overlay').classList.remove('active'); }
