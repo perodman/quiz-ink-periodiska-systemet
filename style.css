@@ -1,78 +1,93 @@
+/* Ersätt hela din style.css */
 body {
     font-family: 'Inter', sans-serif;
-    margin: 0; background: #f1f5f9; color: #1e293b;
+    margin: 0; background: #f8fafc; color: #1e293b;
     height: 100vh; display: flex; flex-direction: column;
     overflow: hidden; touch-action: manipulation;
 }
 
-/* HEADER OCH LAYOUT */
-#header { padding: 8px; background: white; text-align: center; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
-#header h1 { font-size: 16px; margin: 4px 0; font-weight: 900; }
-.mode-selector { display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; }
-.mode-toggle { border: none; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11px; cursor: pointer; background: transparent; }
-.mode-toggle.active { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); color: #3b82f6; }
+/* 1. ROTATIONS-NOTIS (Flyttad till botten för att inte störa) */
+#rotation-notice {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: #1e293b; color: white; padding: 8px 16px; border-radius: 30px;
+    font-size: 12px; font-weight: 700; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex; align-items: center; gap: 8px;
+}
+@media (orientation: landscape) { #rotation-notice { display: none; } }
 
+/* HEADER */
+#header { padding: 10px; background: white; border-bottom: 1px solid #e2e8f0; }
+.header-content { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+h1 { font-size: 18px; margin: 0; font-weight: 900; letter-spacing: -0.5px; }
+
+.mode-selector { display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 10px; }
+.mode-toggle { border: none; padding: 6px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; background: transparent; transition: 0.2s; }
+.mode-toggle.active { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #3b82f6; }
+
+/* GRID */
 #grid-wrapper { flex: 1; overflow: auto; padding: 15px; }
 #main-container { display: grid; grid-template-columns: repeat(18, 55px); grid-template-rows: repeat(10, 55px); gap: 4px; margin: 0 auto; width: fit-content; }
 
-/* ELEMENTEN */
-.element { background: white; border: 1px solid #cbd5e1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 6px; position: relative; transition: transform 0.1s; }
+/* ELEMENT */
+.element {
+    background: white; border: 1px solid #cbd5e1; display: flex; flex-direction: column; 
+    align-items: center; justify-content: center; border-radius: 8px; position: relative;
+    transition: transform 0.1s, opacity 0.3s;
+}
 .element:active { transform: scale(0.9); }
-.symbol { font-weight: 900; font-size: 15px; pointer-events: none; }
-.number { position: absolute; top: 2px; left: 4px; font-size: 8px; font-weight: 800; color: #475569; }
+.symbol { font-weight: 900; font-size: 16px; color: #0f172a; }
+.number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; color: #64748b; }
 
-/* FÄRGER (Inklusive din nya ljusblå) */
-.halvmetall { background: #93c5fd !important; border-color: #2563eb !important; }
+/* QUIZ-LÄGE FIX */
+body.quiz-mode .symbol { visibility: hidden !important; }
+body.quiz-mode .element { border-style: dashed; background: #f1f5f9 !important; }
+
+/* FÄRGER */
 .ickemetall { background: #4ade80 !important; }
 .adelgas { background: #fde047 !important; }
 .alkalimetall { background: #f87171 !important; }
 .alkalisk-jordmetall { background: #fb923c !important; }
+.halvmetall { background: #93c5fd !important; }
 .halogen { background: #c084fc !important; }
 .overgangsmetall { background: #cbd5e1 !important; }
 .metall { background: #94a3b8 !important; }
 .lantanid { background: #f472b6 !important; }
 .aktinid { background: #fb7185 !important; }
 
-/* --- 1. ROTATIONSTIPS LOGIK --- */
-#rotation-hint {
-    position: fixed; top: 10px; right: 10px; background: #0f172a;
-    color: white; padding: 6px 12px; border-radius: 20px; font-size: 11px;
-    z-index: 5000; animation: pulse 2s infinite; font-weight: 600;
-}
-/* Dölj tipset om telefonen ligger ner (landscape) */
-@media (orientation: landscape) { #rotation-hint { display: none; } }
-@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-
-/* --- 2. POPUP & SPRING-ANIMATION --- */
+/* 3D VÄND-KORT (POPUP) */
 #info-overlay {
-    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 6000; backdrop-filter: blur(2px);
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4);
+    display: flex; align-items: center; justify-content: center; z-index: 5000;
+    backdrop-filter: blur(4px); perspective: 1000px;
 }
 
-.info-card {
-    width: 80%; max-width: 300px; /* Smalare kort */
-    background: white; border-radius: 24px; padding: 25px;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
-    position: relative;
-    
-    /* Animationen som studsar (precis som Vasa) */
-    transform: scale(0.7); opacity: 0;
-    animation: springUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+.flip-card {
+    width: 280px; height: 380px; position: relative;
+    transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.flip-card.is-flipped { transform: rotateY(180deg); }
+
+.card-front, .card-back {
+    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+    background: white; border-radius: 30px; padding: 30px; box-sizing: border-box;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: flex; flex-direction: column;
 }
 
-@keyframes springUp {
-    to { transform: scale(1); opacity: 1; }
-}
+.card-back { transform: rotateY(180deg); background: #f8fafc; }
 
-#close-info { 
-    position: absolute; top: 15px; right: 15px; border: none; background: #f1f5f9; 
-    border-radius: 50%; width: 34px; height: 34px; font-size: 24px; font-weight: bold; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-}
+.close-btn { position: absolute; top: 15px; right: 15px; border: none; background: #f1f5f9; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; }
 
-.card-symbol { font-size: 52px; font-weight: 900; color: #3b82f6; text-align: center; margin: 0; }
-.card-name { text-align: center; font-size: 24px; margin: 5px 0 20px; }
-.card-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; margin-top: 20px; }
+.card-symbol { font-size: 60px; font-weight: 900; color: #1e293b; text-align: center; margin: 10px 0 0; }
+.card-name { text-align: center; font-size: 20px; font-weight: 700; color: #64748b; margin: 0 0 25px; }
+
+.card-info-box { background: #f1f5f9; border-radius: 15px; padding: 15px; margin-bottom: 15px; }
+.info-item { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #e2e8f0; }
+.info-item:last-child { border: none; }
+.info-item span { color: #64748b; font-weight: 600; }
+.info-item strong { color: #1e293b; }
+
+.flip-btn { background: transparent; border: 2px solid #3b82f6; color: #3b82f6; padding: 10px; border-radius: 12px; font-weight: 700; font-size: 12px; cursor: pointer; margin-top: auto; }
+.primary-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 14px; border-radius: 15px; font-weight: 800; margin-top: 10px; cursor: pointer; }
+
+#usage-text { font-size: 15px; line-height: 1.5; color: #475569; margin-top: 20px; text-align: center; }
 .hidden { display: none !important; }
