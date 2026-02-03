@@ -1,40 +1,45 @@
 let currentData = [];
 
-// Faktadatabas med svenskt fokus
 const elementFacts = {
-    "H": "Väte är bränslet i våra stjärnor och kan lagra energi i framtidens bilar.",
-    "He": "Helium används i ballonger och för att kyla supraledande magneter.",
-    "Li": "Litium är en nyckelkomponent i batterier för mobiler och elbilar.",
-    "Fe": "Järn är grunden i stål och en viktig del av vårt blod.",
-    "Au": "Guld oxiderar aldrig och är en av de bästa ledarna för elektricitet.",
-    "Cu": "Koppar används i nästan alla världens elledningar."
+    "H": "Väte är universums vanligaste ämne och bränslet i stjärnor.",
+    "He": "Används i ballonger och för att kyla supraledare.",
+    "Li": "Det lättaste metalliska grundämnet, avgörande för batterier.",
+    "Fe": "Grundpelaren i mänsklig civilisation genom stålproduktion.",
+    "Au": "En ädelmetall som aldrig korroderar, perfekt för elektronik.",
+    "Cu": "Oumbärlig för elnätet tack vare sin ledningsförmåga."
 };
 
 function adjustScale() {
     const container = document.getElementById('main-container');
-    container.style.transform = "scale(1)";
-    container.style.marginBottom = "0px";
+    const wrapper = document.getElementById('grid-wrapper');
     
-    // Om vi är i liggande läge (Landscape)
+    container.style.transform = "scale(1)";
+    container.style.height = "auto";
+    
     if (window.innerWidth > window.innerHeight) {
         const systemWidth = (18 * 55) + (17 * 4);
-        const availableWidth = window.innerWidth - 60; // Mer marginal
+        const availableWidth = window.innerWidth - 80;
         
         if (availableWidth < systemWidth) {
             const scale = availableWidth / systemWidth;
             container.style.transform = `scale(${scale})`;
             
-            // Tvinga fram scroll-mån för bottenraderna
+            // VIKTIGT: Beräkna containerns nya höjd så att scrollen fungerar
             const systemHeight = (10 * 55) + (9 * 4);
             const scaledHeight = systemHeight * scale;
-            container.style.marginBottom = `-${systemHeight - scaledHeight + 50}px`;
+            // Vi sätter containerns höjd till den faktiska skalade höjden plus marginal
+            container.style.height = `${systemHeight}px`; 
+            wrapper.style.minHeight = "auto";
         }
+    } else {
+        container.style.height = "auto";
     }
 }
 
 window.addEventListener('resize', adjustScale);
 window.addEventListener('orientationchange', () => setTimeout(adjustScale, 300));
 
+// Hämta data och rendera
 fetch('data.json').then(r => r.json()).then(data => {
     currentData = data.subjects[0].items;
     const container = document.getElementById('main-container');
@@ -46,7 +51,6 @@ fetch('data.json').then(r => r.json()).then(data => {
         div.style.gridRow = item.pos[0];
         div.style.gridColumn = item.pos[1];
         
-        // Kontrast-logik
         const darkCats = ["alkalimetall", "aktinid", "overgangsmetall", "metall", "lantanid"];
         const numClass = darkCats.includes(cat) ? "num-light" : "num-dark";
         
@@ -70,49 +74,46 @@ function showInfoCard(item) {
     
     const bgColor = colors[cat] || "#ffffff";
     const isDark = ["alkalimetall", "aktinid", "metall", "overgangsmetall"].includes(cat);
-    const textColor = isDark ? "light-text" : "dark-text";
+    const textColorClass = isDark ? "light-text" : "dark-text";
 
     [cardF, cardB].forEach(side => {
         side.style.backgroundColor = bgColor;
-        side.className = side.className.replace(/light-text|dark-text/g, "") + " " + textColor;
+        side.className = `card-front ${textColorClass}`;
+        if(side.id === 'card-b') side.className = `card-back ${textColorClass}`;
     });
 
-    // Översättningar med Å, Ä, Ö garanterat
     const translations = {
-        "overgangsmetall": "Övergångsmetall",
-        "ickemetall": "Ickemetall",
-        "adelgas": "Ädelgas",
-        "alkalimetall": "Alkalimetall",
-        "alkalisk-jordmetall": "Alkalisk jordmetall",
-        "halvmetall": "Halvmetall",
-        "halogen": "Halogen",
-        "lantanid": "Lantanid",
-        "aktinid": "Aktinid",
-        "metall": "Metall"
+        "overgangsmetall": "Övergångsmetall", "ickemetall": "Ickemetall", "adelgas": "Ädelgas",
+        "alkalimetall": "Alkalimetall", "alkalisk-jordmetall": "Alkalisk jordmetall",
+        "halvmetall": "Halvmetall", "halogen": "Halogen", "lantanid": "Lantanid",
+        "aktinid": "Aktinid", "metall": "Metall"
     };
 
+    // Framsida
     document.getElementById('info-content-front').innerHTML = `
-        <p class="card-symbol" style="margin:0; text-align:center; font-size:60px; font-weight:900;">${item.symbol}</p>
-        <p class="card-name" style="text-align:center; font-size:22px; margin-bottom:20px;">${item.name}</p>
+        <p class="card-symbol">${item.symbol}</p>
+        <p class="card-name">${item.name}</p>
         <div class="card-info-box">
             <div class="info-item"><span>Atomnummer</span> <strong>${item.number}</strong></div>
             <div class="info-item"><span>Kategori</span> <strong>${translations[cat] || cat}</strong></div>
         </div>
     `;
 
-    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Används flitigt inom svensk industri och vetenskaplig forskning.";
+    // Baksida
+    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Detta grundämne används flitigt inom svensk industri och teknisk utveckling.";
+    
     document.getElementById('info-overlay').classList.remove('hidden');
     document.getElementById('card-inner').classList.remove('is-flipped');
 }
 
-// Event Listeners
+// Kontroller
 document.getElementById('go-to-back').onclick = () => document.getElementById('card-inner').classList.add('is-flipped');
 document.getElementById('go-to-front').onclick = () => document.getElementById('card-inner').classList.remove('is-flipped');
 document.getElementById('close-info').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
 document.getElementById('close-info-back').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
 
 document.getElementById('reset-zoom').onclick = () => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    // Scrolla till toppen
     document.getElementById('grid-wrapper').scrollTo({top: 0, left: 0, behavior: 'smooth'});
     adjustScale();
 };
