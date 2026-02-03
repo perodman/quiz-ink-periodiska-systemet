@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="rotation-hint">🔄 Vänd för bättre vy</div>
+    <div id="rotation-notice"><span>🔄</span> Vänd för bättre vy</div>
     
     <div id="app">
         <header id="header">
-            <h1>Periodiska Systemet</h1>
-            <div class="mode-selector">
-                <button id="study-mode-btn" class="mode-toggle active">Studera</button>
-                <button id="quiz-mode-btn" class="mode-toggle">Quiz</button>
+            <div class="header-content">
+                <h1>Periodiska Systemet</h1>
+                <div class="mode-selector">
+                    <button id="study-mode-btn" class="mode-toggle active">Studera</button>
+                    <button id="quiz-mode-btn" class="mode-toggle">Quiz</button>
+                </div>
             </div>
         </header>
         
@@ -24,11 +26,26 @@
         </div>
 
         <div id="info-overlay" class="hidden">
-            <div class="info-card">
-                <button id="close-info">&times;</button>
-                <div id="info-content"></div>
-                <button id="start-item-quiz" class="primary-btn">Starta Quiz</button>
+            <div class="flip-card" id="card-inner">
+                <div class="card-front">
+                    <button class="close-btn" id="close-info">&times;</button>
+                    <div id="info-content-front"></div>
+                    <button class="flip-btn" id="go-to-back">Mer info ➔</button>
+                    <button id="start-item-quiz" class="primary-btn">Starta Quiz</button>
+                </div>
+                <div class="card-back">
+                    <button class="close-btn" id="close-info-back">&times;</button>
+                    <h3 id="back-title">Användning</h3>
+                    <p id="usage-text">Laddar...</p>
+                    <button class="flip-btn" id="go-to-front">⬅ Tillbaka</button>
+                </div>
             </div>
+        </div>
+
+        <div id="quiz-overlay" class="hidden">
+            <div id="quiz-question">Fråga...</div>
+            <div class="options-container" id="quiz-options"></div>
+            <button id="exit-quiz" class="primary-btn" style="background:#64748b; margin-top:20px;">Avbryt</button>
         </div>
     </div>
     <script src="app.js"></script>
