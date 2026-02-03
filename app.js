@@ -10,11 +10,43 @@ const elementFacts = {
     "Be": "Beryllium är lättare än aluminium men styvare än stål. Det används i rymdteleskop och stridsflygplan.",
     "B": "Bor gör glas värmetåligt (Pyrex) och är en viktig ingrediens i tvättmedel och neutronabsorbenter.",
     "C": "Kol är livets byggsten. Det bildar allt från mjuka grafitstift i pennor till världens hårdaste diamant.",
-    "Si": "Kisel är fundamentet för modern elektronik. Halvledare gjorda av kisel utgör hjärtat i varje smartphone.",
-    "Fe": "Järn är vår viktigaste metall. Genom att blanda det med kol skapas stål, som bygger upp vår infrastruktur.",
-    "Au": "Guld oxiderar aldrig och leder ström bra, vilket gör det oumbärligt för tillförlitliga kontakter i datorer.",
+    "N": "Kväve utgör 78% av luften vi andas. I flytande form används det för att frysa mat snabbt och för att bevara biologiska prover.",
+    "O": "Syre krävs för förbränning och för nästan allt liv. Inom industrin används det för att tillverka stål och plast.",
+    "F": "Fluor är det mest reaktiva grundämnet. Det skyddar våra tänder i form av fluorid och används i non-stick beläggningar.",
+    "Ne": "Neon ger ett karaktäristiskt röd-orange ljus i urladdningsrör. Det används främst i reklamskyltar.",
+    "Na": "Natrium är en mjuk metall som reagerar våldsamt med vatten. Det är en av komponenterna i vanligt bordssalt.",
+    "Mg": "Magnesium brinner med ett extremt starkt vitt ljus. Det används i lättviktslegeringar för bilar och flygplan.",
+    "Al": "Aluminium är känt för sin låga vikt och korrosionsbeständighet. Det används i allt från läskburkar till flygplansskrov.",
+    "Si": "Kisel är fundamentet för modern elektronik. Halvledare gjorda av kisel utgör hjärtat i varje smartphone och dator.",
+    "P": "Fosfor är nödvändigt för DNA och benvävnad. Industriellt används det främst i gödningsmedel.",
+    "S": "Svavel används för att vulkanisera gummi och för att tillverka svavelsyra, världens mest använda industrikemikalie.",
+    "Cl": "Klor är ett effektivt desinfektionsmedel för dricksvatten och simbassänger, och är en viktig del i PVC-plast.",
+    "Ar": "Argon används som skyddgas vid svetsning för att förhindra att den heta metallen reagerar med luft.",
+    "K": "Kalium är livsviktigt för nervsystemet. Det används i stora mängder som gödsel för att hjälpa växter att växa.",
+    "Ca": "Kalcium bygger upp våra tänder och skelett. Det används också som ett legeringsämne för att ta bort föroreningar.",
     "Ti": "Titan är lika starkt som stål men 45% lättare. Det används ofta i medicinska implantat och flygplan.",
-    "Cu": "Koppar leder elektricitet fantastiskt bra och är den viktigaste metallen för elledningar och datorer."
+    "Cr": "Krom ger rostfritt stål dess glans och motståndskraft mot rost. Det används också för kromning av detaljer.",
+    "Mn": "Mangan är avgörande för stålproduktion eftersom det gör stålet hårdare och mer hållbart.",
+    "Fe": "Järn är vår viktigaste metall. Genom att blanda det med kol skapas stål, som bygger upp hela vår infrastruktur.",
+    "Co": "Kobolt används i slitstarka legeringar och är en nyckelkomponent i batterier för elbilar.",
+    "Ni": "Nickel används främst i rostfritt stål och i uppladdningsbara batterier.",
+    "Cu": "Koppar leder elektricitet fantastiskt bra och är den viktigaste metallen för elledningar och datorer.",
+    "Zn": "Zink används främst för att galvanisera stål, vilket förhindrar rostbildning.",
+    "Ga": "Gallium smälter i din hand. Det används främst i halvledare för LED-lampor.",
+    "Ge": "Germanium används i fiberoptik, nattkikare och i speciallinser för infrarött ljus.",
+    "As": "Arsenik används inom elektronik för att förändra ledningsförmågan hos halvledare.",
+    "Se": "Selen är ljuskänsligt och används i fotoceller och solceller.",
+    "Br": "Brom används i flamskyddsmedel för att göra plaster mindre brandfarliga.",
+    "Kr": "Krypton används i energieffektiva fönster och i högpresterande glödlampor.",
+    "Ag": "Silver leder elektricitet bäst av alla grundämnen. Det används i högkvalitativa kontakter och solpaneler.",
+    "Sn": "Tenn används för att belägga andra metaller mot korrosion och är en del av lödtenn.",
+    "I": "Jod är nödvändigt för sköldkörteln. Inom medicin används det som antiseptiskt medel.",
+    "Xe": "Xenon ger ett intensivt vitt ljus och används i bilstrålkastare och jonmotorer.",
+    "W": "Volfram har den högsta smältpunkten av alla metaller och används i glödtrådar och borrar.",
+    "Au": "Guld oxiderar aldrig och leder ström bra, vilket gör det oumbärligt för tillförlitliga kontakter i datorer.",
+    "Hg": "Kvicksilver är den enda metallen som är flytande vid rumstemperatur. Det används i vissa mätinstrument.",
+    "Pb": "Bly är mycket tätt. Det används som skydd mot röntgenstrålning och i bilbatterier.",
+    "U": "Uran är det tyngsta naturliga grundämnet och används som bränsle i kärnkraftverk."
 };
 
 function startApp(mode) {
@@ -23,13 +55,8 @@ function startApp(mode) {
     document.getElementById('fixed-ui').classList.remove('hidden');
     document.getElementById('viewport').classList.remove('hidden');
     
-    // Punkt 3: Uppdatera vy-indikatorn
     const modeDisplay = document.getElementById('current-mode');
-    if(mode === 'study') {
-        modeDisplay.innerText = "Studera";
-    } else {
-        modeDisplay.innerText = "Quiz";
-    }
+    modeDisplay.innerText = mode === 'study' ? "Studera" : "Quiz";
     
     if(mode === 'quiz-symbol') {
         document.getElementById('quiz-bar').classList.remove('hidden');
@@ -81,10 +108,9 @@ function handleElementClick(item) {
             document.getElementById(`el-${item.symbol}`).classList.add('correct');
             setTimeout(pickNewTarget, 800);
         } else {
-            document.getElementById(`el-${item.symbol}`).classList.add('wrong');
-            setTimeout(() => {
-                document.getElementById(`el-${item.symbol}`).classList.remove('wrong');
-            }, 500);
+            const el = document.getElementById(`el-${item.symbol}`);
+            el.classList.add('wrong');
+            setTimeout(() => el.classList.remove('wrong'), 500);
         }
     } else {
         showInfo(item);
@@ -115,7 +141,6 @@ function showInfo(item) {
     document.getElementById('card-b').style.backgroundColor = bgColor;
     document.getElementById('card-inner').className = `card ${textClass}`;
 
-    // Punkt 2: Atomnummer tillagt ovanför namnet
     document.getElementById('front-content').innerHTML = `
         <p style="font-size:16px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
         <p style="font-size:70px; font-weight:900; margin:5px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
@@ -136,13 +161,13 @@ function checkGuess() {
     const el = document.getElementById(`el-${currentItem.symbol}`);
     if(val === currentItem.name.toLowerCase()) {
         el.classList.add('correct');
-        el.querySelector('.symbol').innerText = currentItem.symbol;
+        if(currentMode === 'quiz-name') el.querySelector('.symbol').innerText = currentItem.symbol;
         document.getElementById('overlay').classList.add('hidden');
         document.getElementById('guest-input').value = "";
     } else {
         const input = document.getElementById('guest-input');
         input.style.borderColor = "red";
-        setTimeout(() => { input.style.borderColor = "#ccc"; }, 1000);
+        setTimeout(() => input.style.borderColor = "#ccc", 1000);
     }
 }
 
