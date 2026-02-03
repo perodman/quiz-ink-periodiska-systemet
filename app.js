@@ -1,4 +1,4 @@
-let currentZoom = 1.0;
+let currentZoom = 0.7; // Punkt 3: Mer utzoomat som startpunkt
 let currentMode = 'study';
 let targetElement = null;
 let currentItem = null;
@@ -17,34 +17,23 @@ const elementFacts = {
     "Na": "Natrium är en mjuk metall som reagerar våldsamt med vatten. Det är en av komponenterna i vanligt bordssalt.",
     "Mg": "Magnesium brinner med ett extremt starkt vitt ljus. Det används i lättviktslegeringar för bilar och flygplan.",
     "Al": "Aluminium är känt för sin låga vikt och korrosionsbeständighet. Det används i allt från läskburkar till flygplansskrov.",
-    "Si": "Kisel är fundamentet för modern elektronik. Halvledare gjorda av kisel utgör hjärtat i varje smartphone och dator.",
+    "Si": "Kisel är fundamentet för modern elektronik. Halvledare gjorda av kisel utgör hjärtat i varje smartphone.",
     "P": "Fosfor är nödvändigt för DNA och benvävnad. Industriellt används det främst i gödningsmedel.",
     "S": "Svavel används för att vulkanisera gummi och för att tillverka svavelsyra, världens mest använda industrikemikalie.",
-    "Cl": "Klor är ett effektivt desinfektionsmedel för dricksvatten och simbassänger, och är en viktig del i PVC-plast.",
+    "Cl": "Klor är ett effektivt desinfektionsmedel för simbassänger och är en viktig del i PVC-plast.",
     "Ar": "Argon används som skyddgas vid svetsning för att förhindra att den heta metallen reagerar med luft.",
-    "K": "Kalium är livsviktigt för nervsystemet. Det används i stora mängder som gödsel för att hjälpa växter att växa.",
-    "Ca": "Kalcium bygger upp våra tänder och skelett. Det används också som ett legeringsämne för att ta bort föroreningar.",
+    "K": "Kalium är livsviktigt för nervsystemet. Det används i stora mängder som gödsel.",
+    "Ca": "Kalcium bygger upp våra tänder och skelett. Det används också som ett legeringsämne för att rena metaller.",
     "Ti": "Titan är lika starkt som stål men 45% lättare. Det används ofta i medicinska implantat och flygplan.",
-    "Cr": "Krom ger rostfritt stål dess glans och motståndskraft mot rost. Det används också för kromning av detaljer.",
-    "Mn": "Mangan är avgörande för stålproduktion eftersom det gör stålet hårdare och mer hållbart.",
+    "Cr": "Krom ger rostfritt stål dess glans och motståndskraft mot rost. Det används också för kromning.",
     "Fe": "Järn är vår viktigaste metall. Genom att blanda det med kol skapas stål, som bygger upp hela vår infrastruktur.",
-    "Co": "Kobolt används i slitstarka legeringar och är en nyckelkomponent i batterier för elbilar.",
     "Ni": "Nickel används främst i rostfritt stål och i uppladdningsbara batterier.",
-    "Cu": "Koppar leder elektricitet fantastiskt bra och är den viktigaste metallen för elledningar och datorer.",
+    "Cu": "Koppar leder elektricitet fantastiskt bra och är den viktigaste metallen för elledningar.",
     "Zn": "Zink används främst för att galvanisera stål, vilket förhindrar rostbildning.",
-    "Ga": "Gallium smälter i din hand. Det används främst i halvledare för LED-lampor.",
-    "Ge": "Germanium används i fiberoptik, nattkikare och i speciallinser för infrarött ljus.",
-    "As": "Arsenik används inom elektronik för att förändra ledningsförmågan hos halvledare.",
-    "Se": "Selen är ljuskänsligt och används i fotoceller och solceller.",
-    "Br": "Brom används i flamskyddsmedel för att göra plaster mindre brandfarliga.",
-    "Kr": "Krypton används i energieffektiva fönster och i högpresterande glödlampor.",
     "Ag": "Silver leder elektricitet bäst av alla grundämnen. Det används i högkvalitativa kontakter och solpaneler.",
     "Sn": "Tenn används för att belägga andra metaller mot korrosion och är en del av lödtenn.",
-    "I": "Jod är nödvändigt för sköldkörteln. Inom medicin används det som antiseptiskt medel.",
-    "Xe": "Xenon ger ett intensivt vitt ljus och används i bilstrålkastare och jonmotorer.",
-    "W": "Volfram har den högsta smältpunkten av alla metaller och används i glödtrådar och borrar.",
     "Au": "Guld oxiderar aldrig och leder ström bra, vilket gör det oumbärligt för tillförlitliga kontakter i datorer.",
-    "Hg": "Kvicksilver är den enda metallen som är flytande vid rumstemperatur. Det används i vissa mätinstrument.",
+    "Hg": "Kvicksilver är den enda metallen som är flytande vid rumstemperatur.",
     "Pb": "Bly är mycket tätt. Det används som skydd mot röntgenstrålning och i bilbatterier.",
     "U": "Uran är det tyngsta naturliga grundämnet och används som bränsle i kärnkraftverk."
 };
@@ -105,7 +94,8 @@ function renderTable() {
 function handleElementClick(item) {
     if(currentMode === 'quiz-symbol') {
         if(item.symbol === targetElement.symbol) {
-            document.getElementById(`el-${item.symbol}`).classList.add('correct');
+            // Punkt 5: Diskret markering istället för grön bakgrund
+            document.getElementById(`el-${item.symbol}`).classList.add('completed');
             setTimeout(pickNewTarget, 800);
         } else {
             const el = document.getElementById(`el-${item.symbol}`);
@@ -122,6 +112,10 @@ function showInfo(item) {
     const overlay = document.getElementById('overlay');
     const inputArea = document.getElementById('quiz-input-area');
     const flipBtn = document.getElementById('flip-btn-text');
+    const feedback = document.getElementById('success-feedback');
+    
+    feedback.classList.add('hidden');
+    document.getElementById('guest-input').value = "";
     
     if(currentMode === 'quiz-name') {
         inputArea.classList.remove('hidden');
@@ -135,20 +129,19 @@ function showInfo(item) {
     const colors = { ickemetall: "#4ade80", adelgas: "#fde047", alkalimetall: "#f87171", overgangsmetall: "#cbd5e1", halvmetall: "#7dd3fc", lantanid: "#f472b6", aktinid: "#fb7185" };
     const bgColor = colors[cat] || "#ffffff";
     const isDark = ["alkalimetall", "aktinid", "overgangsmetall", "lantanid", "ickemetall"].includes(cat);
-    const textClass = isDark ? "light-text" : "dark-text";
-
+    
     document.getElementById('card-f').style.backgroundColor = bgColor;
     document.getElementById('card-b').style.backgroundColor = bgColor;
-    document.getElementById('card-inner').className = `card ${textClass}`;
+    document.getElementById('card-inner').className = `card ${isDark ? "light-text" : "dark-text"}`;
 
     document.getElementById('front-content').innerHTML = `
-        <p style="font-size:16px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
-        <p style="font-size:70px; font-weight:900; margin:5px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
-        <p style="font-size:24px; font-weight:700; margin:0;">${currentMode === 'quiz-name' ? '???' : item.name}</p>
+        <p style="font-size:14px; font-weight:800; opacity:0.6; margin:0;">Nr ${item.number}</p>
+        <p style="font-size:60px; font-weight:900; margin:5px 0;">${currentMode === 'quiz-name' ? '?' : item.symbol}</p>
+        <p style="font-size:22px; font-weight:700; margin:0;">${currentMode === 'quiz-name' ? '???' : item.name}</p>
     `;
 
     document.getElementById('usage-text').innerHTML = `
-        <div style="font-weight:900; font-size:20px; margin-bottom:15px;">${item.name} (${item.symbol})</div>
+        <div style="font-weight:900; font-size:18px; margin-bottom:12px;">${item.name} (${item.symbol})</div>
         ${elementFacts[item.symbol] || "Detta grundämne används flitigt inom specialiserad industri och avancerad forskning."}
     `;
     
@@ -159,15 +152,21 @@ function showInfo(item) {
 function checkGuess() {
     const val = document.getElementById('guest-input').value.trim().toLowerCase();
     const el = document.getElementById(`el-${currentItem.symbol}`);
+    const feedback = document.getElementById('success-feedback');
+    
     if(val === currentItem.name.toLowerCase()) {
-        el.classList.add('correct');
+        // Punkt 5: Feedback i popup + diskret markering i tabellen
+        feedback.classList.remove('hidden');
+        el.classList.add('completed');
         if(currentMode === 'quiz-name') el.querySelector('.symbol').innerText = currentItem.symbol;
-        document.getElementById('overlay').classList.add('hidden');
-        document.getElementById('guest-input').value = "";
+        
+        setTimeout(() => {
+            document.getElementById('overlay').classList.add('hidden');
+        }, 1200);
     } else {
         const input = document.getElementById('guest-input');
-        input.style.borderColor = "red";
-        setTimeout(() => input.style.borderColor = "#ccc", 1000);
+        input.style.borderColor = "#ef4444";
+        setTimeout(() => input.style.borderColor = "rgba(0,0,0,0.1)", 1000);
     }
 }
 
@@ -177,7 +176,7 @@ function updateZoom() {
 }
 
 document.getElementById('zoom-in').onclick = () => { currentZoom += 0.1; updateZoom(); };
-document.getElementById('zoom-out').onclick = () => { if(currentZoom > 0.4) currentZoom -= 0.1; updateZoom(); };
-document.getElementById('reset-btn').onclick = () => { currentZoom = 1.0; updateZoom(); };
+document.getElementById('zoom-out').onclick = () => { if(currentZoom > 0.3) currentZoom -= 0.1; updateZoom(); };
+document.getElementById('reset-btn').onclick = () => { currentZoom = 0.7; updateZoom(); };
 document.querySelectorAll('.close-x').forEach(btn => btn.onclick = () => document.getElementById('overlay').classList.add('hidden'));
 document.querySelectorAll('.flip-trigger').forEach(btn => btn.onclick = () => document.getElementById('card-inner').classList.toggle('is-flipped'));
