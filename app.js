@@ -1,50 +1,40 @@
 let currentData = [];
 
-// Faktadatabas
+// Faktadatabas med svenskt fokus
 const elementFacts = {
-    "H": "Bränsle för stjärnor och framtidens bilar.",
-    "He": "Används i ballonger och lasersvetsning.",
-    "Li": "Hjärtat i batterier för mobiler och elbilar.",
-    "Fe": "Huvudbeståndsdelen i stål och vårt blod.",
-    "Au": "En ädelmetall som aldrig korroderar.",
-    "Cu": "Används i alla våra elkablar för sin ledningsförmåga."
+    "H": "Väte är bränslet i våra stjärnor och kan lagra energi i framtidens bilar.",
+    "He": "Helium används i ballonger och för att kyla supraledande magneter.",
+    "Li": "Litium är en nyckelkomponent i batterier för mobiler och elbilar.",
+    "Fe": "Järn är grunden i stål och en viktig del av vårt blod.",
+    "Au": "Guld oxiderar aldrig och är en av de bästa ledarna för elektricitet.",
+    "Cu": "Koppar används i nästan alla världens elledningar."
 };
 
-// 1. SMART SKALNING & POSITIONERING
 function adjustScale() {
     const container = document.getElementById('main-container');
-    const wrapper = document.getElementById('grid-wrapper');
-    
-    // Nollställ för beräkning
     container.style.transform = "scale(1)";
-    container.style.width = "fit-content";
+    container.style.marginBottom = "0px";
     
-    // Endast i LIGGANDE läge (Landscape)
-    if (window.innerHeight < window.innerWidth) {
+    // Om vi är i liggande läge (Landscape)
+    if (window.innerWidth > window.innerHeight) {
         const systemWidth = (18 * 55) + (17 * 4);
-        const availableWidth = window.innerWidth - 40; // Marginal
+        const availableWidth = window.innerWidth - 60; // Mer marginal
         
         if (availableWidth < systemWidth) {
             const scale = availableWidth / systemWidth;
             container.style.transform = `scale(${scale})`;
             
-            // Justera wrapperns scrollbara höjd eftersom scale inte ändrar layout-space
+            // Tvinga fram scroll-mån för bottenraderna
             const systemHeight = (10 * 55) + (9 * 4);
-            container.style.marginBottom = `-${systemHeight * (1 - scale)}px`;
-            container.style.marginRight = `-${systemWidth * (1 - scale)}px`;
+            const scaledHeight = systemHeight * scale;
+            container.style.marginBottom = `-${systemHeight - scaledHeight + 50}px`;
         }
-    } else {
-        // I STÅENDE läge: nollställ allt
-        container.style.transform = "scale(1)";
-        container.style.marginBottom = "0px";
-        container.style.marginRight = "0px";
     }
 }
 
 window.addEventListener('resize', adjustScale);
 window.addEventListener('orientationchange', () => setTimeout(adjustScale, 300));
 
-// 2. RENDERA SYSTEMET
 fetch('data.json').then(r => r.json()).then(data => {
     currentData = data.subjects[0].items;
     const container = document.getElementById('main-container');
@@ -56,9 +46,8 @@ fetch('data.json').then(r => r.json()).then(data => {
         div.style.gridRow = item.pos[0];
         div.style.gridColumn = item.pos[1];
         
-        // Bestäm färg på atomnumret för kontrast
-        // Vi använder mörka nummer på ljusa rutor och ljusa nummer på mörka rutor
-        const darkCats = ["alkalimetall", "aktinid", "overgangsmetall", "metall"];
+        // Kontrast-logik
+        const darkCats = ["alkalimetall", "aktinid", "overgangsmetall", "metall", "lantanid"];
         const numClass = darkCats.includes(cat) ? "num-light" : "num-dark";
         
         div.innerHTML = `<span class="number ${numClass}">${item.number}</span><span class="symbol">${item.symbol}</span>`;
@@ -68,7 +57,6 @@ fetch('data.json').then(r => r.json()).then(data => {
     adjustScale();
 });
 
-// 3. POPUP FUNKTIONER
 function showInfoCard(item) {
     const cardF = document.getElementById('card-f');
     const cardB = document.getElementById('card-b');
@@ -89,40 +77,42 @@ function showInfoCard(item) {
         side.className = side.className.replace(/light-text|dark-text/g, "") + " " + textColor;
     });
 
+    // Översättningar med Å, Ä, Ö garanterat
+    const translations = {
+        "overgangsmetall": "Övergångsmetall",
+        "ickemetall": "Ickemetall",
+        "adelgas": "Ädelgas",
+        "alkalimetall": "Alkalimetall",
+        "alkalisk-jordmetall": "Alkalisk jordmetall",
+        "halvmetall": "Halvmetall",
+        "halogen": "Halogen",
+        "lantanid": "Lantanid",
+        "aktinid": "Aktinid",
+        "metall": "Metall"
+    };
+
     document.getElementById('info-content-front').innerHTML = `
-        <p class="card-symbol" style="margin:0; text-align:center; font-size:64px; font-weight:900;">${item.symbol}</p>
+        <p class="card-symbol" style="margin:0; text-align:center; font-size:60px; font-weight:900;">${item.symbol}</p>
         <p class="card-name" style="text-align:center; font-size:22px; margin-bottom:20px;">${item.name}</p>
         <div class="card-info-box">
             <div class="info-item"><span>Atomnummer</span> <strong>${item.number}</strong></div>
-            <div class="info-item"><span>Kategori</span> <strong style="text-transform:capitalize;">${cat.replace(/-/g, ' ')}</strong></div>
+            <div class="info-item"><span>Kategori</span> <strong>${translations[cat] || cat}</strong></div>
         </div>
     `;
 
-    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Används flitigt inom svensk industri och teknisk utveckling.";
+    document.getElementById('usage-text').innerText = elementFacts[item.symbol] || "Används flitigt inom svensk industri och vetenskaplig forskning.";
     document.getElementById('info-overlay').classList.remove('hidden');
     document.getElementById('card-inner').classList.remove('is-flipped');
 }
 
-// 4. EVENT LISTENERS
+// Event Listeners
 document.getElementById('go-to-back').onclick = () => document.getElementById('card-inner').classList.add('is-flipped');
 document.getElementById('go-to-front').onclick = () => document.getElementById('card-inner').classList.remove('is-flipped');
 document.getElementById('close-info').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
 document.getElementById('close-info-back').onclick = () => document.getElementById('info-overlay').classList.add('hidden');
 
-// Återställ Zoom-knapp
 document.getElementById('reset-zoom').onclick = () => {
-    window.scrollTo(0,0);
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    document.getElementById('grid-wrapper').scrollTo({top: 0, left: 0, behavior: 'smooth'});
     adjustScale();
-};
-
-// Mode Switchers
-document.getElementById('quiz-mode-btn').onclick = function() {
-    document.body.classList.add('quiz-mode');
-    this.classList.add('active');
-    document.getElementById('study-mode-btn').classList.remove('active');
-};
-document.getElementById('study-mode-btn').onclick = function() {
-    document.body.classList.remove('quiz-mode');
-    this.classList.add('active');
-    document.getElementById('quiz-mode-btn').classList.remove('active');
 };
