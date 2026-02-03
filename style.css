@@ -2,47 +2,47 @@ body {
     font-family: 'Inter', sans-serif;
     margin: 0; background: #f8fafc; color: #1e293b;
     height: 100vh; display: flex; flex-direction: column;
-    overflow: hidden; touch-action: manipulation;
+    overflow: hidden;
+}
+
+/* FIXERAD RESET-KNAPP (Uppe till vänster) */
+.fixed-reset-btn {
+    position: fixed; top: 10px; left: 10px; width: 45px; height: 45px;
+    background: white; border: 2px solid #e2e8f0; border-radius: 12px;
+    font-size: 24px; font-weight: bold; color: #3b82f6; z-index: 2000;
+    cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex; align-items: center; justify-content: center;
 }
 
 #rotation-notice {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: #1e293b; color: white; padding: 8px 16px; border-radius: 30px;
-    font-size: 12px; font-weight: 700; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700; z-index: 1000;
 }
 @media (orientation: landscape) { #rotation-notice { display: none; } }
 
-#header { padding: 10px; background: white; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
-.header-content { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-h1 { font-size: 18px; margin: 0; font-weight: 900; letter-spacing: -0.5px; }
+#header { padding: 10px; background: white; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; text-align: center; }
+h1 { font-size: 18px; margin: 0 0 8px; font-weight: 900; }
 
-.controls-row { display: flex; align-items: center; gap: 10px; }
 .mode-selector { display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 10px; }
 .mode-toggle { border: none; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 11px; cursor: pointer; background: transparent; }
 .mode-toggle.active { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); color: #3b82f6; }
 
-.icon-btn { background: #f1f5f9; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-weight: bold; }
-
 /* GRID & SCROLL */
-#grid-wrapper { flex: 1; overflow: auto; padding: 15px; display: block; }
+#grid-wrapper { flex: 1; overflow: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
 #main-container { 
     display: grid; grid-template-columns: repeat(18, 55px); 
     grid-template-rows: repeat(10, 55px); gap: 4px; 
-    width: fit-content;
-    transform-origin: 0 0; /* Startar uppe till vänster */
+    width: fit-content; transform-origin: 0 0;
 }
+#bottom-spacer { height: 100px; width: 100%; } /* Skapar scroll-mån */
 
-.element {
-    background: white; border: 1px solid #cbd5e1; display: flex; flex-direction: column; 
-    align-items: center; justify-content: center; border-radius: 6px; position: relative;
-}
+.element { background: white; border: 1px solid #cbd5e1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 6px; position: relative; }
 .symbol { font-weight: 900; font-size: 16px; color: #0f172a; }
 .number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; }
 
-/* KONTRAST FÖR NUMMER */
 .num-dark { color: #000000; }
-.num-light { color: #ffffff; text-shadow: 0 0 2px rgba(0,0,0,0.5); }
+.num-light { color: #ffffff; text-shadow: 0 0 2px rgba(0,0,0,0.4); }
 
 /* FÄRGER */
 .ickemetall { background: #4ade80 !important; }
@@ -56,7 +56,7 @@ h1 { font-size: 18px; margin: 0; font-weight: 900; letter-spacing: -0.5px; }
 .lantanid { background: #f472b6 !important; }
 .aktinid { background: #fb7185 !important; }
 
-/* POPUP DESIGN */
+/* FLIP-KORT FIX */
 #info-overlay {
     position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4);
     display: flex; align-items: center; justify-content: center; z-index: 5000;
@@ -64,11 +64,26 @@ h1 { font-size: 18px; margin: 0; font-weight: 900; letter-spacing: -0.5px; }
 }
 .flip-card { width: 280px; height: 380px; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 .flip-card.is-flipped { transform: rotateY(180deg); }
-.card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 30px; padding: 30px; box-sizing: border-box; display: flex; flex-direction: column; }
+
+/* Göm baksidan vid rotation så den inte flimrar igenom */
+.card-front, .card-back { 
+    position: absolute; width: 100%; height: 100%; 
+    backface-visibility: hidden; -webkit-backface-visibility: hidden; 
+    border-radius: 30px; padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; 
+}
 .card-back { transform: rotateY(180deg); }
-.card-info-box { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); border-radius: 15px; padding: 15px; margin-bottom: 10px; }
+
+/* Centrerad text på baksidan */
+.card-body-back { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+#back-title { font-weight: 900; font-size: 22px; margin-bottom: 10px; width: 100%; }
+#usage-text { font-size: 16px; line-height: 1.5; margin: 0; }
+
+.card-info-box { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); border-radius: 15px; padding: 12px; margin-bottom: 10px; width: 100%; }
 .info-item { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+.light-text { color: white !important; }
+.dark-text { color: #1e293b !important; }
 .primary-btn { width: 100%; background: #1e293b; color: white; border: none; padding: 14px; border-radius: 15px; font-weight: 800; margin-top: 10px; }
-.close-btn { position: absolute; top: 15px; right: 15px; border: none; background: rgba(0,0,0,0.05); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; }
+.close-btn { position: absolute; top: 15px; right: 15px; border: none; background: rgba(0,0,0,0.1); border-radius: 50%; width: 30px; height: 30px; cursor: pointer; }
 .flip-btn { background: rgba(255,255,255,0.2); border: 1px solid currentColor; color: inherit; padding: 10px; border-radius: 12px; font-weight: 700; margin-top: auto; cursor: pointer; }
 .hidden { display: none !important; }
