@@ -19,46 +19,45 @@ body, html {
 
 /* HEADER & ZOOM */
 #app-header { 
-    position: fixed; top: 0; left: 0; right: 0; background: white; padding: 12px; 
+    position: fixed; top: 0; left: 0; right: 0; background: white; padding: 15px; 
     border-bottom: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; z-index: 2000; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
-.header-main { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-.header-main h2 { margin: 0; font-size: 15px; font-weight: 900; color: #1e293b; }
-.home-btn { border: none; background: #f1f5f9; border-radius: 8px; cursor: pointer; padding: 5px 8px; }
-.mode-indicator { background: #eff6ff; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 800; color: #3b82f6; text-transform: uppercase; }
-.zoom-toolbar { display: flex; gap: 4px; }
-.zoom-btn { background: #f8fafc; border: 1px solid #e2e8f0; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.header-main { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
 
-/* PERIODISKA SYSTEMET GRID */
+/* Större rubrik */
+#main-title { margin: 0; font-size: 24px; font-weight: 900; color: #0f172a; letter-spacing: -0.5px; }
+
+/* Större hemknapp */
+.home-btn { border: none; background: #f1f5f9; border-radius: 10px; cursor: pointer; padding: 8px 12px; font-size: 22px; line-height: 1; transition: 0.2s; }
+.home-btn:active { transform: scale(0.9); background: #e2e8f0; }
+
+.mode-indicator { background: #eff6ff; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; color: #3b82f6; text-transform: uppercase; }
+
+/* Zoom-sektion */
+.zoom-section { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.zoom-label { font-size: 9px; font-weight: 800; color: #94a3b8; letter-spacing: 1.5px; }
+.zoom-toolbar { display: flex; gap: 6px; background: #f8fafc; padding: 4px; border-radius: 10px; border: 1px solid #f1f5f9; }
+.zoom-btn { background: white; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+/* GRID & VIEWPORT */
 #viewport { width: 100vw; height: 100vh; overflow: auto; -webkit-overflow-scrolling: touch; }
-#table-container { display: grid; grid-template-columns: repeat(18, 54px); grid-template-rows: repeat(10, 54px); gap: 4px; padding: 120px 40px; transform-origin: 0 0; }
+#table-container { display: grid; grid-template-columns: repeat(18, 54px); grid-template-rows: repeat(10, 54px); gap: 4px; padding: 160px 40px; transform-origin: 0 0; }
 .element { background: white; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; }
 .symbol { font-weight: 900; font-size: 16px; }
 .number { position: absolute; top: 3px; left: 5px; font-size: 9px; font-weight: 800; }
 
-/* POPUP DESIGN */
-#overlay { 
-    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); 
-    display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); z-index: 3000; 
-}
-.card { 
-    width: 270px; height: 360px; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    animation: popIn 0.3s ease-out; 
-}
+/* POPUP */
+#overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); z-index: 3000; }
+.card { width: 270px; height: 360px; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: popIn 0.3s ease-out; }
 @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-.card-face { 
-    position: absolute; inset: 0; backface-visibility: hidden; border-radius: 22px; 
-    padding: 20px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 15px 35px rgba(0,0,0,0.25); 
-}
+.card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 22px; padding: 20px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 15px 35px rgba(0,0,0,0.25); }
 .card-back { transform: rotateY(180deg); }
 .is-flipped { transform: rotateY(180deg); }
-
 .content-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
 .card-info-box { background: rgba(255,255,255,0.2); border-radius: 14px; padding: 10px; width: 100%; margin: 12px 0; box-sizing: border-box; }
 .info-item { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .back-content-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.back-content-wrapper p { font-size: 14px; line-height: 1.5; margin: 0; }
 
 /* FÄRGER */
 .ickemetall { background: #4ade80 !important; } .adelgas { background: #fde047 !important; }
